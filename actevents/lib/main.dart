@@ -29,7 +29,19 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Actevents"), backgroundColor: Colors.lightBlue[900]),
+        title: Text("Actevents"),
+        backgroundColor: Colors.lightBlue[900],
+        actions: <Widget>[
+          _selectedTabIndex == 2
+              ? IconButton(
+                  icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ))
+              : Text(
+                  "") //TODO: look for a better solution than empty Text element
+        ],
+      ),
       body: Center(child: _pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTabIndex,
