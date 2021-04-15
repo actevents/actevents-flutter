@@ -33,10 +33,12 @@ class _MyAppState extends State<MyApp> {
         currentIndex: _selectedTabIndex,
         onTap: _changeIndex,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), label: "My Account"),
+              icon: Icon(Icons.search_outlined), label: "Find"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.star_border), label: "Events"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_box_outlined), label: "Profile"),
         ],
       ),
     );
