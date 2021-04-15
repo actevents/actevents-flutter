@@ -1,5 +1,7 @@
-import 'package:actevents/events.dart';
 import 'package:flutter/material.dart';
+import 'profile.dart';
+import 'events.dart';
+import 'find.dart';
 
 void main() => runApp(MaterialApp(home: MyApp()));
 
@@ -13,8 +15,8 @@ class _MyAppState extends State<MyApp> {
 
   List _pages = [
     Events(),
-    Text("Search"),
-    Text("Account"),
+    Find(),
+    Profile(),
   ];
 
   _changeIndex(int index) {

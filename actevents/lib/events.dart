@@ -7,8 +7,12 @@ class Events extends StatefulWidget {
 
 
 class _Events extends State<Events> {
+
+  //TODO: check save statemanagement when navigating from widget
+  int count=0;
   @override
   Widget build(BuildContext context) {
-    return Text("My Events from widget");
+    count++;
+    return Text("My Events from widget" + count.toString());
   }
 }
