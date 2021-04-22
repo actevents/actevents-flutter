@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Find extends StatefulWidget {
+class FindPage extends StatefulWidget {
   @override
-  _FindState createState() => _FindState();
+  _FindPageState createState() => _FindPageState();
 }
 
-class _FindState extends State<Find> {
+class _FindPageState extends State<FindPage> {
   @override
   Widget build(BuildContext context) {
     return Text("From widget find");
