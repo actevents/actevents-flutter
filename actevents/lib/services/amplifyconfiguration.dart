@@ -9,42 +9,18 @@ const amplifyconfig = ''' {
                 "IdentityManager": {
                     "Default": {}
                 },
-                "CredentialsProvider": {
-                    "CognitoIdentity": {
-                        "Default": {
-                            "PoolId": "us-east-1:d3db4aa1-26ce-406e-8870-9b6e0cb2e311",
-                            "Region": "us-east-1"
-                        }
-                    }
-                },
                 "CognitoUserPool": {
                     "Default": {
-                        "PoolId": "us-east-1_XA7sl3xMm",
-                        "AppClientId": "4g47kkr6m37b0bbg7k136opfuo",
-                        "AppClientSecret": "ifsuhebmitjpvfvsoj5idh0h95qptfd71s2h4odld34ffgvlm1d",
-                        "Region": "us-east-1"
+                        "PoolId": "eu-central-1_zUunJTKLc",
+                        "AppClientId": "5kpgsod09bprcqia11m0npq214",
+                        "Region": "eu-central-1"
                     }
                 },
                 "Auth": {
                     "Default": {
                         "authenticationFlowType": "USER_SRP_AUTH"
                     }
-                },
-                "S3TransferUtility": {
-                    "Default": {
-                        "Bucket": "buckety142853-dev",
-                        "Region": "us-east-1"
-                    }
                 }
-            }
-        }
-    },
-    "storage": {
-        "plugins": {
-            "awsS3StoragePlugin": {
-                "bucket": "buckety142853-dev",
-                "region": "us-east-1",
-                "defaultAccessLevel": "guest"
             }
         }
     }

@@ -24,11 +24,12 @@ class _RootPageState extends State<RootPage> {
 
   initState() {
     super.initState();
-    widget.auth.currentUser().then((userId) {
-      setState(() {
-        authStatus = userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
-      });
-    });
+    // widget.auth.currentUser().then((userId) {
+    //   setState(() {
+    //     authStatus = userId != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
+    //   });
+    // });
+    authStatus = AuthStatus.notSignedIn;
   }
 
   void _updateAuthStatus(AuthStatus status) {

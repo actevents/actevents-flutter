@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
+// import 'package:flutter_login/flutter_login.dart';
 import '../../helpers/primaryButton.dart';
 import '../../services/auth.dart';
 
@@ -18,7 +18,6 @@ enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
   static final formKey = new GlobalKey<FormState>();
-
   String _email;
   String _password;
   FormType _formType = FormType.login;
@@ -36,11 +35,14 @@ class _LoginPageState extends State<LoginPage> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        String userId = _formType == FormType.login
-            ? await widget.auth.signIn(_email, _password)
-            : await widget.auth.createUser(_email, _password);
+        await widget.auth.configureAmplify();
+        if (_formType == FormType.login) {
+          await widget.auth.signIn(_email, _password);
+        } else {
+          await widget.auth.createUser(_email, _password);
+        }
         setState(() {
-          _authHint = 'Signed In\n\nUser id: $userId';
+          _authHint = 'Signed In\n\nUser id: To be defined';
         });
         widget.onSignIn();
       } catch (e) {
@@ -103,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Login',
               height: 44.0,
               onPressed: validateAndSubmit),
-          new FlatButton(
+          new TextButton(
               key: new Key('need-account'),
               child: new Text("Need an account? Register"),
               onPressed: moveToRegister),
@@ -115,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Create an account',
               height: 44.0,
               onPressed: validateAndSubmit),
-          new FlatButton(
+          new TextButton(
               key: new Key('need-login'),
               child: new Text("Have an account? Login"),
               onPressed: moveToLogin),
@@ -141,41 +143,37 @@ class _LoginPageState extends State<LoginPage> {
           title: new Text(widget.title),
         ),
         backgroundColor: Colors.grey[300],
-        body: 
-        
-        // SafeArea(
-        //   child: FlutterLogin(
-        //       onLogin: _signIn,
-        //       onSignup: _registerUser,
-        //       onRecoverPassword: (_) => null,
-        //       title: 'Flutter Amplify'),
-        // ));
+        body:
 
-      new SingleChildScrollView(child: new Container(
-        padding: const EdgeInsets.all(16.0),
-        child: new Column(
-          children: [
-            new Card(
-              child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new Container(
+            // SafeArea(
+            //   child: FlutterLogin(
+            //       onLogin: _signIn,
+            //       onSignup: _registerUser,
+            //       onRecoverPassword: (_) => null,
+            //       title: 'Flutter Amplify'),
+            // ));
+
+            new SingleChildScrollView(
+                child: new Container(
                     padding: const EdgeInsets.all(16.0),
-                    child: new Form(
-                        key: formKey,
-                        child: new Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: usernameAndPassword() + submitWidgets(),
-                        )
-                    )
-                ),
-              ])
-            ),
-            hintText()
-          ]
-        )
-      ))
-    );
+                    child: new Column(children: [
+                      new Card(
+                          child: new Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                            new Container(
+                                padding: const EdgeInsets.all(16.0),
+                                child: new Form(
+                                    key: formKey,
+                                    child: new Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: usernameAndPassword() +
+                                          submitWidgets(),
+                                    ))),
+                          ])),
+                      hintText()
+                    ]))));
   }
 
   Widget padded({Widget child}) {
@@ -184,8 +182,4 @@ class _LoginPageState extends State<LoginPage> {
       child: child,
     );
   }
-
-  Future<String> _signIn(LoginData p1) {}
-
-  Future<String> _registerUser(LoginData p1) {}
 }
