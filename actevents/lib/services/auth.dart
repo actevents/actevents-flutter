@@ -18,19 +18,21 @@ class AmplifyAuth implements BaseAuth {
   String _removeResult = '';
   bool isSignedIn = false;
 
-  AmplifyClass amplifyInstance = new AmplifyClass();
+  AmplifyClass amplifyInstance;
   AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
 
   Future<void> configureAmplify() async {
-    if (amplifyInstance.isConfigured) {
+    if (amplifyInstance != null) {
       return;
     }
+    amplifyInstance = new AmplifyClass();
     amplifyInstance.addPlugin(authPlugin);
     await amplifyInstance.configure(amplifyconfig);
   }
 
   Future<bool> signIn(String email, String password) async {
     try {
+      await configureAmplify();
       SignInResult res = await authPlugin.signIn(
           request: SignInRequest(
               password: password,
