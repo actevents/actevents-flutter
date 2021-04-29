@@ -17,7 +17,12 @@ class LoginPage extends StatefulWidget {
 enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
+  _LoginPageState() {
+   _passwordController = TextEditingController(); 
+  }
+
   static final formKey = new GlobalKey<FormState>();
+  TextEditingController _passwordController;
   String _email;
   String _password;
   FormType _formType = FormType.login;
@@ -35,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        await widget.auth.configureAmplify();
         if (_formType == FormType.login) {
           await widget.auth.signIn(_email, _password);
         } else {
@@ -75,25 +79,60 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<Widget> usernameAndPassword() {
-    return [
-      padded(
-          child: new TextFormField(
-        key: new Key('email'),
-        decoration: new InputDecoration(labelText: 'Email'),
-        autocorrect: false,
-        validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
-        onSaved: (val) => _email = val,
-      )),
-      padded(
-          child: new TextFormField(
-        key: new Key('password'),
-        decoration: new InputDecoration(labelText: 'Password'),
-        obscureText: true,
-        autocorrect: false,
-        validator: (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
-        onSaved: (val) => _password = val,
-      )),
-    ];
+    switch (_formType) {
+      case FormType.login:
+        return [
+          padded(
+              child: new TextFormField(
+            key: new Key('email'),
+            decoration: new InputDecoration(labelText: 'Email'),
+            autocorrect: false,
+            validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
+            onSaved: (val) => _email = val,
+          )),
+          padded(
+              child: new TextFormField(
+            key: new Key('password'),
+            decoration: new InputDecoration(labelText: 'Password'),
+            obscureText: true,
+            autocorrect: false,
+            validator: (val) =>
+                val.isEmpty ? 'Password can\'t be empty.' : null,
+            onSaved: (val) => _password = val,
+          )),
+        ];
+      case FormType.register:
+        return [
+          padded(
+              child: new TextFormField(
+            key: new Key('email'),
+            decoration: new InputDecoration(labelText: 'Email'),
+            autocorrect: false,
+            validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
+            onSaved: (val) => _email = val,
+          )),
+          padded(
+              child: new TextFormField(
+            key: new Key('password'),
+            controller: _passwordController,
+            decoration: new InputDecoration(labelText: 'Password'),
+            obscureText: true,
+            autocorrect: false,
+            validator: (val) =>
+                val.isEmpty ? 'Password can\'t be empty.' : null,
+            onSaved: (val) => _password = val,
+          )),
+          padded(
+              child: new TextFormField(
+            key: new Key('passwordConfirm'),
+            decoration: new InputDecoration(labelText: 'Password wiederholen'),
+            obscureText: true,
+            autocorrect: false,
+            validator: (val) => 
+            val != _passwordController.text ? "Passwörter müssen gleich sein" : null,
+          )),
+        ];
+    }
   }
 
   List<Widget> submitWidgets() {
