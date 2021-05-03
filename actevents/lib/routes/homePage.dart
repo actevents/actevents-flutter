@@ -1,14 +1,16 @@
 import 'package:actevents/routes/events/findPage.dart';
 import 'package:actevents/routes/user/profilePage.dart';
 import 'package:actevents/services/auth.dart';
+import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
 
 import 'events/eventsPage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({this.auth, this.onSignOut});
+  HomePage({this.auth, this.onSignOut, this.location});
   final BaseAuth auth;
   final VoidCallback onSignOut;
+  final LocationService location;
   @override
   _HomePageState createState() =>
       _HomePageState(auth: auth, onSignOut: onSignOut);
@@ -20,11 +22,7 @@ class _HomePageState extends State<HomePage> {
   final VoidCallback onSignOut;
 
   int _selectedTabIndex = 0;
-  List _pages = [
-    EventsPage(),
-    FindPage(),
-    ProfilePage(),
-  ];
+  List _pages;
 
   _changeIndex(int index) {
     setState(() {
@@ -43,6 +41,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _pages = [
+      EventsPage(location: widget.location),
+      FindPage(),
+      ProfilePage(),
+    ];
+
     return new Scaffold(
       appBar: new AppBar(
         actions: <Widget>[
