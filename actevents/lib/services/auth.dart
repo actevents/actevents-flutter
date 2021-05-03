@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:io';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
@@ -27,7 +28,11 @@ class AmplifyAuth implements BaseAuth {
     }
     amplifyInstance = new AmplifyClass();
     amplifyInstance.addPlugin(authPlugin);
-    await amplifyInstance.configure(amplifyconfig);
+    try {
+      await amplifyInstance.configure(amplifyconfig);
+    } catch (e) {
+      log(e);
+    }
   }
 
   Future<bool> signIn(String email, String password) async {
@@ -36,7 +41,7 @@ class AmplifyAuth implements BaseAuth {
       SignInResult res = await authPlugin.signIn(
           request: SignInRequest(
               password: password,
-              username: email,
+              username: email.trim(),
               options: CognitoSignInOptions()));
     } catch (e) {
       print(e);
@@ -48,6 +53,7 @@ class AmplifyAuth implements BaseAuth {
 
   Future<bool> createUser(String email, String password) async {
     try {
+      await configureAmplify();
       var result = await authPlugin.signUp(
           request: SignUpRequest(
               username: email,

@@ -1,5 +1,6 @@
 import 'package:actevents/routes/rootPage.dart';
 import 'package:actevents/services/auth.dart';
+import 'package:actevents/services/locationService.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new RootPage(auth: new AmplifyAuth()),
+      home: new RootPage(auth: new AmplifyAuth(),location: new LocationService())
     );
   }
 }

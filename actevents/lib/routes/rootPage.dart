@@ -1,14 +1,15 @@
 import 'package:actevents/routes/user/loginPage.dart';
 import 'package:actevents/services/auth.dart';
+import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
 
 import 'homePage.dart';
 
 
 class RootPage extends StatefulWidget {
-  RootPage({Key key, this.auth}) : super(key: key);
+  RootPage({Key key, this.auth, this.location}) : super(key: key);
   final BaseAuth auth;
-
+  final LocationService location;
   @override
   State<StatefulWidget> createState() => new _RootPageState();
 }
@@ -50,6 +51,7 @@ class _RootPageState extends State<RootPage> {
       case AuthStatus.signedIn:
         return new HomePage(
           auth: widget.auth,
+          location: widget.location,
           onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
         );
     }

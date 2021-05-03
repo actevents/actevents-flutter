@@ -1,9 +1,13 @@
 import 'package:actevents/models/actevent.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
-import 'package:flutter/rendering.dart';
+import 'package:actevents/services/locationService.dart';
+import 'package:location/location.dart';
 
 class EventsPage extends StatefulWidget {
+  EventsPage({this.location});
+
+  final LocationService location;
   @override
   _EventsPage createState() => _EventsPage();
 }
@@ -12,22 +16,27 @@ class _EventsPage extends State<EventsPage> {
   //TODO: check save statemanagement when navigating from widget
 
   double _distance = 10;
+  LocationData _data;
 
   ApiService apiService = ApiService();
 
   List<Actevent> fetchedEvents = [];
 
   void loadEvents() async {
-    // get location and distance from location service
-    String longitude = "8.639580";
-    String latitude = "48.357393";
-    fetchedEvents = await apiService.getEventsInArea(
-        longitude, latitude, this._distance.round());
+    fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
+        _data.latitude.toString(), this._distance.round());
   }
 
   void sliderChanged(double newValue) {
     setState(() {
       _distance = newValue;
+    });
+  }
+
+  @override
+  void initState() {
+    setState(() async {
+      _data = await widget.location.getLocation();
     });
   }
 
