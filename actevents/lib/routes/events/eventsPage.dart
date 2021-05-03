@@ -23,6 +23,10 @@ class _EventsPage extends State<EventsPage> {
   List<Actevent> fetchedEvents = [];
 
   void loadEvents() async {
+    print("Longitude: " +
+        _data.longitude.toString() +
+        "\nLatitude: " +
+        _data.longitude.toString());
     fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
         _data.latitude.toString(), this._distance.round());
   }
@@ -67,12 +71,9 @@ class _EventsPage extends State<EventsPage> {
         ),
         Row(
           children: [
-            ElevatedButton(
-              onPressed: loadEvents, 
-              child: Text("Events laden")
-            )
+            ElevatedButton(onPressed: loadEvents, child: Text("Events laden"))
           ],
-        )
+        ),
         Column(
           children: [],
         )
