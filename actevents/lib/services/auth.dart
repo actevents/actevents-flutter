@@ -41,8 +41,7 @@ class AmplifyAuth implements BaseAuth {
       SignInResult res = await authPlugin.signIn(
           request: SignInRequest(
               password: password,
-              username: email.trim(),
-              options: CognitoSignInOptions()));
+              username: email.trim()));
     } catch (e) {
       print(e);
       return false;
