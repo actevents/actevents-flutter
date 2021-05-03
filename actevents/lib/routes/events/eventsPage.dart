@@ -60,6 +60,14 @@ class _EventsPage extends State<EventsPage> {
                 onChanged: sliderChanged)
           ],
         ),
+        Row(
+          children: [
+            ElevatedButton(
+              onPressed: loadEvents, 
+              child: Text("Events laden")
+            )
+          ],
+        )
         Column(
           children: [],
         )
