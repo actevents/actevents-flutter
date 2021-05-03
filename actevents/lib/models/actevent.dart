@@ -5,7 +5,7 @@ class Actevent {
   String name;
   String longitude;
   String latitude;
-  Double distance;
+  double distance;
 
   Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});
 
@@ -15,6 +15,6 @@ class Actevent {
         name: json["name"] as String,
         longitude: json["longitude"] as String,
         latitude: json["latitude"] as String,
-        distance: json["distance"] as Double);
+        distance: json["distance"]);
   }
 }

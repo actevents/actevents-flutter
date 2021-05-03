@@ -1,9 +1,10 @@
-import 'package:actevents/services/locationService.dart';
+import 'package:actevents/models/actevent.dart';
 import 'package:flutter/material.dart';
+import 'package:actevents/services/apiService.dart';
+import 'package:actevents/services/locationService.dart';
 import 'package:location/location.dart';
 
 class EventsPage extends StatefulWidget {
-
   EventsPage({this.location});
 
   final LocationService location;
@@ -13,10 +14,27 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPage extends State<EventsPage> {
   //TODO: check save statemanagement when navigating from widget
+
+  double _distance = 10;
   LocationData _data;
-  int count = 0;
-@override
-  void initState() { 
+
+  ApiService apiService = ApiService();
+
+  List<Actevent> fetchedEvents = [];
+
+  void loadEvents() async {
+    fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
+        _data.latitude.toString(), this._distance.round());
+  }
+
+  void sliderChanged(double newValue) {
+    setState(() {
+      _distance = newValue;
+    });
+  }
+
+  @override
+  void initState() {
     setState(() async {
       _data = await widget.location.getLocation();
     });
@@ -24,6 +42,28 @@ class _EventsPage extends State<EventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Text("My Events from widget " + _data?.toString() ?? "");
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text("Umkreis"),
+          ],
+        ),
+        Row(
+          children: [
+            Slider(
+                value: _distance,
+                min: 10,
+                max: 100,
+                divisions: 9,
+                label: _distance.round().toString() + " km",
+                onChanged: sliderChanged)
+          ],
+        ),
+        Column(
+          children: [],
+        )
+      ],
+    );
   }
 }
