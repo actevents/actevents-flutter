@@ -27,16 +27,21 @@ class _EventsPage extends State<EventsPage> {
         _data.latitude.toString(), this._distance.round());
   }
 
-  void sliderChanged(double newValue) {
+  @override
+  void initState() {
+    _loadAsync();
+  }
+
+  void _loadAsync() async {
+    var data = await widget.location.getLocation();
     setState(() {
-      _distance = newValue;
+      _data = data;
     });
   }
 
-  @override
-  void initState() {
-    setState(() async {
-      _data = await widget.location.getLocation();
+  void sliderChanged(double newValue) {
+    setState(() {
+      _distance = newValue;
     });
   }
 
