@@ -41,13 +41,21 @@ class _LoginPageState extends State<LoginPage> {
     if (validateAndSave()) {
       try {
         if (_formType == FormType.login) {
-          await widget.auth.signIn(_email, _password);
+          var result = await widget.auth.signIn(_email, _password);
+          if (!result) {
+             setState(() {
+            _authHint = 'Der Benutzer oder das Passwort ist falsch.';
+             });
+          }
+
         } else {
-          await widget.auth.createUser(_email, _password);
+          var result =  await widget.auth.createUser(_email, _password);
+          if (!result) {
+            setState(() {
+              _authHint = 'Beim Anlegen des Benutzers ist etwas schiefgegangen.';
+            });
+          }
         }
-        setState(() {
-          _authHint = 'Signed In\n\nUser id: To be defined';
-        });
         widget.onSignIn();
       } catch (e) {
         setState(() {
