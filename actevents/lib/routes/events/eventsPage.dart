@@ -107,13 +107,15 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Widget listItem(Actevent event) {
-    return ListTile(
-      leading: Icon(Icons.pin_drop_outlined),
-      title: Text(event.name),
-      subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
-      onTap: () {
-        print("Event tile tapped.");
-      },
+    return Card(
+      child: ListTile(
+        leading: Icon(Icons.pin_drop_outlined),
+        title: Text(event.name),
+        subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
+        onTap: () {
+          print("Event tile tapped.");
+        },
+      ),
     );
   }
 
