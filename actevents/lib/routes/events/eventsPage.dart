@@ -57,23 +57,16 @@ class _EventsPage extends State<EventsPage> {
     });
   }
 
-  Future<List<Actevent>> fetchData() async {
-    //Position pos = await widget.location.getLocation();
-    //return await apiService.getEventsInArea(
-    //    pos.longitude.toString(), pos.latitude.toString(), _distance.round());
-    return await apiService.getLocalTestList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget eventList() {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        filterOptions(),
         FutureBuilder<List<Actevent>>(
             future: fetchData(),
             builder:
                 (BuildContext context, AsyncSnapshot<List<Actevent>> snapshot) {
               if (snapshot.hasData) {
+                print(snapshot.data);
                 return displayEventList(snapshot.data);
               } else if (snapshot.hasError) {
                 return Text("Fehler beim Abrufen der Daten.");
@@ -85,29 +78,46 @@ class _EventsPage extends State<EventsPage> {
     );
   }
 
+  Future<List<Actevent>> fetchData() async {
+    //Position pos = await widget.location.getLocation();
+    //return await apiService.getEventsInArea(
+    //    pos.longitude.toString(), pos.latitude.toString(), _distance.round());
+    return await apiService.getLocalTestList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [filterOptionsPanel(), eventList()],
+    );
+  }
+
   Widget displayEventList(List<Actevent> list) {
     List<Widget> children = [];
-    list?.map((e) => children.add(listItem(e)));
+
+    list.forEach((event) {
+      Widget item = listItem(event);
+      children.add(item);
+    });
 
     return ListView(
+      shrinkWrap: true,
       children: children,
     );
   }
 
   Widget listItem(Actevent event) {
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.pin_drop_outlined),
-        title: Text(event.name),
-        subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
-        onTap: () {
-          print("Event tile tapped.");
-        },
-      ),
+    return ListTile(
+      leading: Icon(Icons.pin_drop_outlined),
+      title: Text(event.name),
+      subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
+      onTap: () {
+        print("Event tile tapped.");
+      },
     );
   }
 
-  Widget filterOptions() {
+  Widget filterOptionsPanel() {
     return Column(
       children: [
         Row(
