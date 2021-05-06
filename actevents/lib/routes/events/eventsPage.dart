@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:actevents/models/actevent.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
@@ -34,6 +35,8 @@ class _EventsPage extends State<EventsPage> {
     // for (var item in fetchedEvents) {
     //   log(item.toString());
     // }
+    //fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
+    //    _data.latitude.toString(), this._distance.round());
   }
 
   @override
@@ -54,8 +57,57 @@ class _EventsPage extends State<EventsPage> {
     });
   }
 
+  Future<List<Actevent>> fetchData() async {
+    //Position pos = await widget.location.getLocation();
+    //return await apiService.getEventsInArea(
+    //    pos.longitude.toString(), pos.latitude.toString(), _distance.round());
+    return await apiService.getLocalTestList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        filterOptions(),
+        FutureBuilder<List<Actevent>>(
+            future: fetchData(),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Actevent>> snapshot) {
+              if (snapshot.hasData) {
+                return displayEventList(snapshot.data);
+              } else if (snapshot.hasError) {
+                return Text("Fehler beim Abrufen der Daten.");
+              } else {
+                return Text("Keine Daten geladen.");
+              }
+            })
+      ],
+    );
+  }
+
+  Widget displayEventList(List<Actevent> list) {
+    List<Widget> children = [];
+    list?.map((e) => children.add(listItem(e)));
+
+    return ListView(
+      children: children,
+    );
+  }
+
+  Widget listItem(Actevent event) {
+    return Card(
+      child: ListTile(
+        leading: Icon(Icons.pin_drop_outlined),
+        title: Text(event.name),
+        subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
+        onTap: () {
+          print("Event tile tapped.");
+        },
+      ),
+    );
+  }
+
+  Widget filterOptions() {
     return Column(
       children: [
         Row(
@@ -76,11 +128,9 @@ class _EventsPage extends State<EventsPage> {
         ),
         Row(
           children: [
-            ElevatedButton(onPressed: loadEvents, child: Text("Events laden"))
+            ElevatedButton(
+                onPressed: loadEvents, child: Text("Events mit Filter laden"))
           ],
-        ),
-        Column(
-          children: [],
         )
       ],
     );

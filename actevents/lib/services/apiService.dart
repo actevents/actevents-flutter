@@ -1,4 +1,5 @@
 import 'package:actevents/models/actevent.dart';
+import 'package:actevents/routes/rootPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -27,7 +28,37 @@ class ApiService {
     } else {
       // TODO: error handling
       print("Error ocured. Non 200 status code returned from api.");
+      print("Status code: " +
+          response.statusCode.toString() +
+          "\nBody: " +
+          response.body);
       return [];
     }
+  }
+
+  // Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});
+
+  Future<List<Actevent>> getLocalTestList() async {
+    List<Actevent> list = [];
+    list.add(Actevent(
+        id: 'kadjfkladhjfkladsjfla',
+        name: 'Testevent #1',
+        longitude: '8.5500',
+        latitude: '48.4557',
+        distance: 100));
+    list.add(Actevent(
+        id: 'dafdggfda',
+        name: 'Rave bei Marvin',
+        longitude: '8.5011',
+        latitude: '48.4679',
+        distance: 100));
+    list.add(Actevent(
+        id: 'kadjfkladhjfklafsdgfdsjfla',
+        name: 'Rave bei Marvin #2',
+        longitude: '8.5011',
+        latitude: '48.4679',
+        distance: 100));
+
+    return Future.value(list);
   }
 }
