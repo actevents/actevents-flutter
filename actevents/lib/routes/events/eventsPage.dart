@@ -79,9 +79,9 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Future<List<Actevent>> fetchData() async {
-    //Position pos = await widget.location.getLocation();
-    //return await apiService.getEventsInArea(
-    //    pos.longitude.toString(), pos.latitude.toString(), _distance.round());
+    // Position pos = await widget.location.getLocation();
+    // return await apiService.getEventsInArea(
+    //     pos.longitude.toString(), pos.latitude.toString(), _distance.round());
     return await apiService.getLocalTestList();
   }
 
@@ -111,7 +111,13 @@ class _EventsPage extends State<EventsPage> {
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
         title: Text(event.name),
-        subtitle: Text("Position: " + event.latitude + ", " + event.longitude),
+        subtitle: Text("Position: " +
+            event.latitude +
+            ", " +
+            event.longitude +
+            " / Abstand: " +
+            event.distance.round().toString() +
+            "km"),
         onTap: () {
           print("Event tile tapped.");
         },
