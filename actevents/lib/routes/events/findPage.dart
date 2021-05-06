@@ -50,6 +50,7 @@ class _FindPageState extends State<FindPage> {
           } else if (snapshot.hasError) {
             return Text("error");
           }
+          return Text("");
         });
   }
 }
