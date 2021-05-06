@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:actevents/routes/user/loginPage.dart';
 import 'package:actevents/services/auth.dart';
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
 
 import 'homePage.dart';
-
 
 class RootPage extends StatefulWidget {
   RootPage({Key key, this.auth, this.location}) : super(key: key);
@@ -20,12 +21,26 @@ enum AuthStatus {
 }
 
 class _RootPageState extends State<RootPage> {
-
   AuthStatus authStatus = AuthStatus.notSignedIn;
 
   initState() {
     super.initState();
+    checkLogin();
     authStatus = AuthStatus.notSignedIn;
+  }
+
+  void checkLogin() async {
+    try {
+      var result = await widget.auth.currentUser();
+      setState(() {
+        authStatus = AuthStatus.signedIn;
+      });
+    } catch (e) {
+      log(e);
+      setState(() {
+        authStatus = AuthStatus.notSignedIn;
+      });
+    }
   }
 
   void _updateAuthStatus(AuthStatus status) {
@@ -45,10 +60,9 @@ class _RootPageState extends State<RootPage> {
         );
       case AuthStatus.signedIn:
         return new HomePage(
-          auth: widget.auth,
-          location: widget.location,
-          onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
-        );
+            auth: widget.auth,
+            location: widget.location,
+            onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn));
     }
   }
 }

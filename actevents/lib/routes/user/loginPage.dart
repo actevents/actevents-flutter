@@ -18,7 +18,7 @@ enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
   _LoginPageState() {
-   _passwordController = TextEditingController(); 
+    _passwordController = TextEditingController();
   }
 
   static final formKey = new GlobalKey<FormState>();
@@ -43,20 +43,23 @@ class _LoginPageState extends State<LoginPage> {
         if (_formType == FormType.login) {
           var result = await widget.auth.signIn(_email, _password);
           if (!result) {
-             setState(() {
-            _authHint = 'Der Benutzer oder das Passwort ist falsch.';
-             });
+            setState(() {
+              _authHint = 'Der Benutzer oder das Passwort ist falsch.';
+            });
+          } else {
+            widget.onSignIn();
           }
-
         } else {
-          var result =  await widget.auth.createUser(_email, _password);
+          var result = await widget.auth.createUser(_email, _password);
           if (!result) {
             setState(() {
-              _authHint = 'Beim Anlegen des Benutzers ist etwas schiefgegangen.';
+              _authHint =
+                  'Beim Anlegen des Benutzers ist etwas schiefgegangen.';
             });
+          } else {
+            widget.onSignIn();
           }
         }
-        widget.onSignIn();
       } catch (e) {
         setState(() {
           _authHint = 'Sign In Error\n\n${e.toString()}';
@@ -136,8 +139,9 @@ class _LoginPageState extends State<LoginPage> {
             decoration: new InputDecoration(labelText: 'Password wiederholen'),
             obscureText: true,
             autocorrect: false,
-            validator: (val) => 
-            val != _passwordController.text ? "Passwörter müssen gleich sein" : null,
+            validator: (val) => val != _passwordController.text
+                ? "Passwörter müssen gleich sein"
+                : null,
           )),
         ];
     }

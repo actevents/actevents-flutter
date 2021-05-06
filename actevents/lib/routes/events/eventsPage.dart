@@ -2,7 +2,7 @@ import 'package:actevents/models/actevent.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class EventsPage extends StatefulWidget {
   EventsPage({this.location});
@@ -16,7 +16,7 @@ class _EventsPage extends State<EventsPage> {
   //TODO: check save statemanagement when navigating from widget
 
   double _distance = 10;
-  LocationData _data;
+  Position _data;
 
   ApiService apiService = ApiService();
 
