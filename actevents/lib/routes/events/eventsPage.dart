@@ -26,7 +26,7 @@ class _EventsPage extends State<EventsPage> {
     print("Longitude: " +
         _data.longitude.toString() +
         "\nLatitude: " +
-        _data.longitude.toString());
+        _data.latitude.toString());
     fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
         _data.latitude.toString(), this._distance.round());
   }
