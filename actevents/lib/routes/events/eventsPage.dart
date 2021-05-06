@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
@@ -29,6 +31,9 @@ class _EventsPage extends State<EventsPage> {
         _data.latitude.toString());
     fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
         _data.latitude.toString(), this._distance.round());
+    // for (var item in fetchedEvents) {
+    //   log(item.toString());
+    // }
   }
 
   @override

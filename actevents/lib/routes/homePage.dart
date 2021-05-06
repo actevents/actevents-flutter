@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     _pages = [
       EventsPage(location: widget.location),
-      FindPage(),
+      FindPage(location: widget.location),
       ProfilePage(),
     ];
 
