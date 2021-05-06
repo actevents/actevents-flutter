@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/routes/rootPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:uuid/uuid.dart';
 
 class ApiService {
   String _baseUrl = 'qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
@@ -40,25 +44,17 @@ class ApiService {
 
   Future<List<Actevent>> getLocalTestList() async {
     List<Actevent> list = [];
-    list.add(Actevent(
-        id: 'kadjfkladhjfkladsjfla',
-        name: 'Testevent #1',
-        longitude: '8.5500',
-        latitude: '48.4557',
-        distance: 100));
-    list.add(Actevent(
-        id: 'dafdggfda',
-        name: 'Rave bei Marvin',
-        longitude: '8.5011',
-        latitude: '48.4679',
-        distance: 100));
-    list.add(Actevent(
-        id: 'kadjfkladhjfklafsdgfdsjfla',
-        name: 'Rave bei Marvin #2',
-        longitude: '8.5011',
-        latitude: '48.4679',
-        distance: 100));
-
+    Random randomGenerator = Random();
+    Uuid uuid = Uuid();
+    for (int i = 0; i < randomGenerator.nextInt(25) + 1; i++) {
+      list.add(Actevent(
+          id: uuid.v4(),
+          name: "Rave bei Marvin #$i",
+          longitude: "8.5011",
+          latitude: '48.4679',
+          distance: randomGenerator.nextInt(100).toDouble()));
+    }
+    list.sort((a, b) => (a.distance - b.distance).toInt());
     return Future.value(list);
   }
 }

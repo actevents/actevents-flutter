@@ -20,28 +20,25 @@ class _EventsPage extends State<EventsPage> {
 
   double _distance = 10;
   Position _data;
+  Future<List<Actevent>> _events;
 
   ApiService apiService = ApiService();
 
-  List<Actevent> fetchedEvents = [];
-
-  void loadEvents() async {
+  void _loadEvents() async {
     print("Longitude: " +
         _data.longitude.toString() +
         "\nLatitude: " +
         _data.latitude.toString());
-    fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
-        _data.latitude.toString(), this._distance.round());
-    // for (var item in fetchedEvents) {
-    //   log(item.toString());
-    // }
-    //fetchedEvents = await apiService.getEventsInArea(_data.longitude.toString(),
-    //    _data.latitude.toString(), this._distance.round());
+    _setFetchedEvents(await apiService.getEventsInArea(
+        _data.longitude.toString(),
+        _data.latitude.toString(),
+        this._distance.round()));
   }
 
   @override
   void initState() {
     _loadAsync();
+    _events = _fetchData();
   }
 
   void _loadAsync() async {
@@ -51,62 +48,73 @@ class _EventsPage extends State<EventsPage> {
     });
   }
 
-  void sliderChanged(double newValue) {
+  void _sliderChanged(double newValue) {
     setState(() {
       _distance = newValue;
     });
   }
 
-  Widget eventList() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FutureBuilder<List<Actevent>>(
-            future: fetchData(),
+  void _setFetchedEvents(List<Actevent> events) {
+    setState(() {
+      // _fetchedEvents = events;
+    });
+  }
+
+  Widget _eventList() {
+    return Container(
+        child: FutureBuilder<List<Actevent>>(
+            future: _events,
             builder:
                 (BuildContext context, AsyncSnapshot<List<Actevent>> snapshot) {
               if (snapshot.hasData) {
                 print(snapshot.data);
-                return displayEventList(snapshot.data);
+                return _displayEventList(snapshot.data);
               } else if (snapshot.hasError) {
                 return Text("Fehler beim Abrufen der Daten.");
               } else {
                 return Text("Keine Daten geladen.");
               }
-            })
-      ],
-    );
+            }));
   }
 
-  Future<List<Actevent>> fetchData() async {
+  Future<List<Actevent>> _fetchData() async {
     // Position pos = await widget.location.getLocation();
     // return await apiService.getEventsInArea(
     //     pos.longitude.toString(), pos.latitude.toString(), _distance.round());
     return await apiService.getLocalTestList();
   }
 
+  Future<void> _handleRefresh() async {
+    print("Not implemented - WIP");
+    setState(() {
+      _events = _fetchData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [filterOptionsPanel(), eventList()],
+      children: [_filterOptionsPanel(), Expanded(child: _eventList())],
     );
   }
 
-  Widget displayEventList(List<Actevent> list) {
+  Widget _displayEventList(List<Actevent> list) {
     List<Widget> children = [];
 
     list.forEach((event) {
-      Widget item = listItem(event);
+      Widget item = _listItem(event);
       children.add(item);
     });
 
-    return ListView(
-      shrinkWrap: true,
-      children: children,
-    );
+    return RefreshIndicator(
+        child: ListView(
+          shrinkWrap: true,
+          children: children,
+        ),
+        onRefresh: _handleRefresh);
   }
 
-  Widget listItem(Actevent event) {
+  Widget _listItem(Actevent event) {
     return Card(
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
@@ -125,32 +133,50 @@ class _EventsPage extends State<EventsPage> {
     );
   }
 
-  Widget filterOptionsPanel() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text("Umkreis"),
-          ],
-        ),
-        Row(
-          children: [
-            Slider(
-                value: _distance,
-                min: 10,
-                max: 100,
-                divisions: 9,
-                label: _distance.round().toString() + " km",
-                onChanged: sliderChanged)
-          ],
-        ),
-        Row(
-          children: [
-            ElevatedButton(
-                onPressed: loadEvents, child: Text("Events mit Filter laden"))
-          ],
-        )
-      ],
+  Widget _filterOptionsPanel() {
+    const double containerPadding = 10;
+    return Container(
+      padding: const EdgeInsets.all(containerPadding),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width - containerPadding * 2,
+                child: Text(
+                  "Umkreis",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width - containerPadding * 2,
+                child: Slider(
+                    value: _distance,
+                    min: 10,
+                    max: 100,
+                    divisions: 9,
+                    label: _distance.round().toString() + " km",
+                    onChanged: _sliderChanged),
+              )
+            ],
+          ),
+          // Row(
+          //   children: [
+          //     Container(
+          //         width:
+          //             MediaQuery.of(context).size.width - containerPadding * 2,
+          //         child: ElevatedButton(
+          //             onPressed: _loadEvents,
+          //             child: Text("Events mit Filter laden")))
+          //   ],
+          // )
+        ],
+      ),
     );
   }
 }
