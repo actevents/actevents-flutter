@@ -21,6 +21,7 @@ class _EventsPage extends State<EventsPage> {
   double _distance = 10;
   Position _data;
   Future<List<Actevent>> _events;
+  bool _filterOptionsExpanded = true;
 
   ApiService apiService = ApiService();
 
@@ -117,38 +118,56 @@ class _EventsPage extends State<EventsPage> {
 
   Widget _filterOptionsPanel() {
     const double containerPadding = 10;
-    return Container(
-      padding: const EdgeInsets.all(containerPadding),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - containerPadding * 2,
-                child: Text(
-                  "Umkreis",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
-                ),
+
+    return ExpansionPanelList(
+      expansionCallback: (panelIndex, isExpanded) => {
+        setState(() {
+          _filterOptionsExpanded = !isExpanded;
+        })
+      },
+      children: [
+        ExpansionPanel(
+            isExpanded: _filterOptionsExpanded,
+            headerBuilder: (context, isExpanded) {
+              return ListTile(
+                title: Text("Filteroptionen"),
+              );
+            },
+            body: Container(
+              padding: const EdgeInsets.all(containerPadding),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: (MediaQuery.of(context).size.width -
+                                containerPadding * 2) /
+                            3,
+                        child: Text(
+                          "Umkreis",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      Container(
+                        width: (MediaQuery.of(context).size.width -
+                                containerPadding * 2) *
+                            2 /
+                            3,
+                        child: Slider(
+                            value: _distance,
+                            min: 10,
+                            max: 100,
+                            divisions: 9,
+                            label: _distance.round().toString() + " km",
+                            onChanged: _sliderChanged),
+                      )
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width - containerPadding * 2,
-                child: Slider(
-                    value: _distance,
-                    min: 10,
-                    max: 100,
-                    divisions: 9,
-                    label: _distance.round().toString() + " km",
-                    onChanged: _sliderChanged),
-              )
-            ],
-          ),
-        ],
-      ),
+            ))
+      ],
     );
   }
 }
