@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:actevents/models/actevent.dart';
+import 'package:actevents/routes/events/eventsdetailPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
@@ -127,6 +128,13 @@ class _EventsPage extends State<EventsPage> {
             event.distance.round().toString() +
             "km"),
         onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (c)
+            {
+              return EventsDetailPage(event: event);
+            }
+            )
+          );
           print("Event tile tapped.");
         },
       ),
