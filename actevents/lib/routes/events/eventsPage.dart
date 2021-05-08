@@ -24,17 +24,6 @@ class _EventsPage extends State<EventsPage> {
 
   ApiService apiService = ApiService();
 
-  void _loadEvents() async {
-    print("Longitude: " +
-        _data.longitude.toString() +
-        "\nLatitude: " +
-        _data.latitude.toString());
-    _setFetchedEvents(await apiService.getEventsInArea(
-        _data.longitude.toString(),
-        _data.latitude.toString(),
-        this._distance.round()));
-  }
-
   @override
   void initState() {
     _loadAsync();
@@ -51,12 +40,6 @@ class _EventsPage extends State<EventsPage> {
   void _sliderChanged(double newValue) {
     setState(() {
       _distance = newValue;
-    });
-  }
-
-  void _setFetchedEvents(List<Actevent> events) {
-    setState(() {
-      // _fetchedEvents = events;
     });
   }
 
@@ -85,7 +68,6 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Future<void> _handleRefresh() async {
-    print("Not implemented - WIP");
     setState(() {
       _events = _fetchData();
     });
@@ -165,16 +147,6 @@ class _EventsPage extends State<EventsPage> {
               )
             ],
           ),
-          // Row(
-          //   children: [
-          //     Container(
-          //         width:
-          //             MediaQuery.of(context).size.width - containerPadding * 2,
-          //         child: ElevatedButton(
-          //             onPressed: _loadEvents,
-          //             child: Text("Events mit Filter laden")))
-          //   ],
-          // )
         ],
       ),
     );
