@@ -14,7 +14,7 @@ class ApiService {
   };
 
   Future<List<Actevent>> getEventsInArea(
-      String longitude, String latitude, int distance) async {
+      String latitude, String longitude, int distance) async {
     Map<String, dynamic> queryParameters = {
       'longitude': longitude,
       'latitude': latitude,

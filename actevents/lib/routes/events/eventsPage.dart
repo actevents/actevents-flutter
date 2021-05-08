@@ -21,7 +21,7 @@ class _EventsPage extends State<EventsPage> {
   double _distance = 10;
   Position _data;
   Future<List<Actevent>> _events;
-  bool _filterOptionsExpanded = true;
+  bool _filterOptionsExpanded = false;
 
   ApiService apiService = ApiService();
 
@@ -56,16 +56,24 @@ class _EventsPage extends State<EventsPage> {
               } else if (snapshot.hasError) {
                 return Text("Fehler beim Abrufen der Daten.");
               } else {
-                return Text("Keine Daten geladen.");
+                return Container(
+                    padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                    child: Text(
+                      "Daten werden geladen...",
+                      style: TextStyle(color: Colors.grey),
+                    ));
               }
             }));
   }
 
   Future<List<Actevent>> _fetchData() async {
-    // Position pos = await widget.location.getLocation();
-    // return await apiService.getEventsInArea(
-    //     pos.longitude.toString(), pos.latitude.toString(), _distance.round());
-    return await apiService.getLocalTestList();
+    Position pos = await widget.location.getLocation();
+    String latitude = pos.latitude.toString();
+    String longitude = pos.longitude.toString();
+    print("Getting events for $latitude, $longitude and $_distance");
+    return await apiService.getEventsInArea(
+        latitude, longitude, _distance.round());
+    // return await apiService.getLocalTestList();
   }
 
   Future<void> _handleRefresh() async {
@@ -82,6 +90,15 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Widget _displayEventList(List<Actevent> list) {
+    // TODO: implement way to refresh page when no events are found with current filter options
+    if (list.length == 0)
+      return Container(
+          padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+          child: Text(
+            "Keine Events für deinen Standort gefunden.",
+            style: TextStyle(color: Colors.grey),
+          ));
+
     List<Widget> children = [];
 
     list.forEach((event) {
