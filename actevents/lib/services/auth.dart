@@ -39,15 +39,13 @@ class AmplifyAuth implements BaseAuth {
     try {
       await configureAmplify();
       SignInResult res = await authPlugin.signIn(
-          request: SignInRequest(
-              password: password,
-              username: email.trim()));
+          request: SignInRequest(password: password, username: email.trim()));
+      isSignedIn = res.isSignedIn;
+      return isSignedIn;
     } catch (e) {
       print(e);
       return false;
     }
-    isSignedIn = true;
-    return true;
   }
 
   Future<bool> createUser(String email, String password) async {
@@ -57,7 +55,8 @@ class AmplifyAuth implements BaseAuth {
           request: SignUpRequest(
               username: email,
               password: password,
-              options: CognitoSignUpOptions(userAttributes: Map<String, String>())));
+              options:
+                  CognitoSignUpOptions(userAttributes: Map<String, String>())));
       if (result.isSignUpComplete) {
         return true;
       }
