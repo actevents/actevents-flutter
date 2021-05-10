@@ -19,7 +19,7 @@ class EventsPage extends StatefulWidget {
 class _EventsPage extends State<EventsPage> {
   //TODO: check save statemanagement when navigating from widget
 
-  double _distance = 10;
+  double _distance = 50;
   Position _data;
   Future<List<Actevent>> _events;
   bool _filterOptionsExpanded = false;
@@ -128,14 +128,9 @@ class _EventsPage extends State<EventsPage> {
             event.distance.round().toString() +
             "km"),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (c)
-            {
-              return EventsDetailPage(event: event);
-            }
-            )
-          );
-          print("Event tile tapped.");
+          Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+            return EventsDetailPage(event: event);
+          }));
         },
       ),
     );
