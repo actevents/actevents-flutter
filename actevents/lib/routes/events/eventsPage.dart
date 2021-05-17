@@ -50,7 +50,8 @@ class _EventsPage extends State<EventsPage> {
                 print(snapshot.data);
                 return _displayEventList(snapshot.data);
               } else if (snapshot.hasError) {
-                return Text("Fehler beim Abrufen der Daten.");
+                return _statusTextWithReloadOption(
+                    "Fehler beim Abrufen der Daten");
               } else {
                 return Container(
                     padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
@@ -60,6 +61,24 @@ class _EventsPage extends State<EventsPage> {
                     ));
               }
             }));
+  }
+
+  Widget _statusTextWithReloadOption(String statusText) {
+    return Column(
+      children: [
+        Container(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+            child: Text(
+              statusText,
+              style: TextStyle(color: Colors.grey),
+            )),
+        OutlinedButton(
+            onPressed: _handleRefresh,
+            child: Text(
+              "Neu laden",
+            ))
+      ],
+    );
   }
 
   Future<List<Actevent>> _fetchData() async {
@@ -88,12 +107,8 @@ class _EventsPage extends State<EventsPage> {
   Widget _displayEventList(List<Actevent> list) {
     // TODO: implement way to refresh page when no events are found with current filter options
     if (list.length == 0)
-      return Container(
-          padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-          child: Text(
-            "Keine Events für deinen Standort gefunden.",
-            style: TextStyle(color: Colors.grey),
-          ));
+      return _statusTextWithReloadOption(
+          "Keine Events für deinen Standort gefunden.");
 
     List<Widget> children = [];
 

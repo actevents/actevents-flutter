@@ -28,29 +28,48 @@ class _DateTimePickerState extends State<DateTimePicker> {
 
   String dateTime;
 
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay(hour: 00, minute: 00);
+  DateTime selectedDateTime = DateTime.now();
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: selectedDateTime,
         firstDate: DateTime.now(),
         lastDate: DateTime.now().add(const Duration(days: 365)));
     if (picked != null)
       setState(() {
-        selectedDate = picked;
+        selectedDateTime = picked;
         _dateController.text = "${picked.day}.${picked.month}.${picked.year}";
       });
   }
 
+  String _formatDate(DateTime dateTime) {
+    var formatter = DateFormat("dd.MM.yyyy");
+    return formatter.format(dateTime);
+  }
+
+  String _formatTime(DateTime dateTime) {
+    if (dateTime != null) {
+      var formatter = DateFormat("hh:mm");
+      return formatter.format(dateTime);
+    }
+    throw ArgumentError(
+        "Cannot format time with both arguments at the same time");
+  }
+
   Future<Null> _selectTime(BuildContext context) async {
-    final TimeOfDay picked =
-        await showTimePicker(context: context, initialTime: selectedTime);
+    final TimeOfDay picked = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime));
     if (picked != null) {
       setState(() {
-        selectedTime = picked;
-        _time = _formatTime(timeOfDay: selectedTime);
+        selectedDateTime = DateTime(
+            selectedDateTime.year,
+            selectedDateTime.month,
+            selectedDateTime.day,
+            picked.hour,
+            picked.minute);
+        _time = _formatTime(selectedDateTime);
         _timeController.text = _time;
       });
     }
@@ -60,25 +79,8 @@ class _DateTimePickerState extends State<DateTimePicker> {
   void initState() {
     DateTime now = DateTime.now();
     _dateController.text = _formatDate(now);
-    _timeController.text = _formatTime(dateTime: now);
+    _timeController.text = _formatTime(now);
     super.initState();
-  }
-
-  String _formatDate(DateTime dateTime) {
-    var formatter = DateFormat("dd.MM.yyyy");
-    return formatter.format(dateTime);
-  }
-
-  String _formatTime({timeOfDay: TimeOfDay, dateTime: DateTime}) {
-    if (timeOfDay != null) {
-      return timeOfDay.format(context);
-    }
-    if (dateTime != null) {
-      var formatter = DateFormat("hh:mm");
-      return formatter.format(dateTime);
-    }
-    throw ArgumentError(
-        "Cannot format time with both arguments at the same time");
   }
 
   @override

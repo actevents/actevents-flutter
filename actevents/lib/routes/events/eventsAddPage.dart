@@ -107,6 +107,10 @@ class _EventsAddPageState extends State<EventsAddPage> {
           decoration: const InputDecoration(
               icon: Icon(Icons.location_on_outlined), labelText: "Longitude *"),
         ),
+        // ----------------------------------
+        // ---------- Images ----------------
+        _drawDivider(),
+        Text("Bilder", textAlign: TextAlign.center)
       ].where(notNull).toList(),
       padding: const EdgeInsets.all(borderPadding),
     );
