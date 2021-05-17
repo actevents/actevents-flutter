@@ -13,7 +13,7 @@ class ApiService {
   }
   final String idToken;
 
-  String _baseUrl = 'qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
+  String _baseUrl = 'api.actevents.de';
   Map<String, String> _headers = { };
 
   Future<List<Actevent>> getEventsInArea(
@@ -41,6 +41,23 @@ class ApiService {
           response.body);
       return [];
     }
+  }
+
+  Future<Actevent> getEventById(String id) async {
+      var uri = Uri.https(this._baseUrl, '/test' + '/events/' + id);
+      http.Response response = await http.get(uri, headers: this._headers);
+      if (response.statusCode == 200) {
+        dynamic body = jsonDecode(response.body);
+            return Actevent.fromJSON(body);
+      } else {
+        // TODO: error handling
+        print("Error ocured. Non 200 status code returned from api.");
+        print("Status code: " +
+            response.statusCode.toString() +
+            "\nBody: " +
+            response.body);
+        return null;
+      }
   }
 
   // Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});

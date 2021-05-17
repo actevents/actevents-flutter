@@ -20,8 +20,9 @@ class Actevent {
     return Actevent(
         id: json["id"] as String,
         name: json["name"] as String,
-        longitude: json["longitude"] as String,
-        latitude: json["latitude"] as String,
+        description: json["description"] as String,
+        longitude: (json["location"] as Map<String, dynamic>)["longitude"]as String,
+        latitude: (json["location"] as Map<String, dynamic>)["latitude"] as String,
         distance: json["distance"]);
   }
 }

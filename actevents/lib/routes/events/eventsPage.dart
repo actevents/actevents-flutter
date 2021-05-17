@@ -16,14 +16,11 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPage extends State<EventsPage> {
-
-
-
   double _distance = 50;
   Position _data;
   Future<List<Actevent>> _events;
   bool _filterOptionsExpanded = false;
-  
+
   @override
   void initState() {
     _loadAsync();
@@ -70,8 +67,8 @@ class _EventsPage extends State<EventsPage> {
     String latitude = pos.latitude.toString();
     String longitude = pos.longitude.toString();
     print("Getting events for $latitude, $longitude and $_distance");
-    return await widget.apiService.getEventsInArea(
-        latitude, longitude, _distance.round());
+    return await widget.apiService
+        .getEventsInArea(latitude, longitude, _distance.round());
     // return await apiService.getLocalTestList();
   }
 
@@ -100,10 +97,10 @@ class _EventsPage extends State<EventsPage> {
 
     List<Widget> children = [];
 
-    list.forEach((event) {
+    for (var event in list) {
       Widget item = _listItem(event);
       children.add(item);
-    });
+    }
 
     return RefreshIndicator(
         child: ListView(
@@ -120,15 +117,16 @@ class _EventsPage extends State<EventsPage> {
         leading: Icon(Icons.pin_drop_outlined),
         title: Text(event.name),
         subtitle: Text("Position: " +
-            event.latitude +
+            event?.latitude +
             ", " +
-            event.longitude +
+            event?.longitude +
             " / Abstand: " +
             event.distance.round().toString() +
             "km"),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-            return EventsDetailPage(event: event);
+            return EventsDetailPage(
+                eventId: event.id, apiService: widget.apiService);
           }));
         },
       ),
