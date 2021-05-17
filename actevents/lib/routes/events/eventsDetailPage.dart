@@ -1,9 +1,7 @@
 import 'package:actevents/models/actevent.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
 class EventsDetailPage extends StatelessWidget {

@@ -1,3 +1,5 @@
+import 'package:geocoder/geocoder.dart';
+import 'package:geocoder/model.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
@@ -36,5 +38,11 @@ class LocationService {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<Address> convertCoordinatesToAddress(Coordinates coordinates) async {
+    List<Address> addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    return addresses.first;
   }
 }

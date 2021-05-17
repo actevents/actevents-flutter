@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:actevents/models/actevent.dart';
-import 'package:actevents/routes/events/eventsdetailPage.dart';
+import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
@@ -25,6 +23,7 @@ class _EventsPage extends State<EventsPage> {
   bool _filterOptionsExpanded = false;
 
   ApiService apiService = ApiService();
+  LocationService locationService = LocationService();
 
   @override
   void initState() {
@@ -116,6 +115,7 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Widget _listItem(Actevent event) {
+    // TODO: get address here from locationService.convert...
     return Card(
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
