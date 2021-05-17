@@ -1,3 +1,4 @@
+import 'package:actevents/routes/events/eventsAddPage.dart';
 import 'package:actevents/routes/events/findPage.dart';
 import 'package:actevents/routes/user/profilePage.dart';
 import 'package:actevents/services/apiService.dart';
@@ -71,6 +72,19 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.account_box_outlined), label: "Profile"),
         ],
       ),
+      floatingActionButton: _selectedTabIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                  return EventsAddPage();
+                }));
+              },
+              child: Text(
+                "+",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
+              ),
+            )
+          : null,
     );
   }
 }

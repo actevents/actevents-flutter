@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:actevents/models/actevent.dart';
-import 'package:actevents/routes/events/eventsdetailPage.dart';
+import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
@@ -21,13 +19,11 @@ class _EventsPage extends State<EventsPage> {
 
 
 
-  double _distance = 10;
+  double _distance = 50;
   Position _data;
   Future<List<Actevent>> _events;
   bool _filterOptionsExpanded = false;
-
-
-
+  
   @override
   void initState() {
     _loadAsync();
@@ -118,6 +114,7 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Widget _listItem(Actevent event) {
+    // TODO: get address here from locationService.convert...
     return Card(
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
@@ -130,14 +127,9 @@ class _EventsPage extends State<EventsPage> {
             event.distance.round().toString() +
             "km"),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (c)
-            {
-              return EventsDetailPage(event: event);
-            }
-            )
-          );
-          print("Event tile tapped.");
+          Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+            return EventsDetailPage(event: event);
+          }));
         },
       ),
     );

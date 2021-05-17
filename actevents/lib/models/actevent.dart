@@ -6,8 +6,15 @@ class Actevent {
   String longitude;
   String latitude;
   double distance;
+  String description;
 
-  Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});
+  Actevent(
+      {this.id,
+      this.name,
+      this.longitude,
+      this.latitude,
+      this.distance,
+      this.description});
 
   factory Actevent.fromJSON(Map<String, dynamic> json) {
     return Actevent(
