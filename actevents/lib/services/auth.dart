@@ -11,6 +11,7 @@ abstract class BaseAuth {
   Future<bool> signIn(String email, String password);
   Future<bool> createUser(String email, String password);
   Future<void> signOut();
+  Future<String> getIdToken();
 }
 
 class AmplifyAuth implements BaseAuth {
@@ -45,6 +46,17 @@ class AmplifyAuth implements BaseAuth {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  Future<String> getIdToken() async {
+    try {
+      CognitoAuthSession res = await Amplify.Auth.fetchAuthSession(
+        options: CognitoSessionOptions(getAWSCredentials: true)
+      );
+      return res.userPoolTokens.idToken;
+    } catch (e) {
+      return "";
     }
   }
 

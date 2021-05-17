@@ -1,5 +1,6 @@
 import 'package:actevents/routes/events/findPage.dart';
 import 'package:actevents/routes/user/profilePage.dart';
+import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/auth.dart';
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'events/eventsPage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({this.auth, this.onSignOut, this.location});
+  HomePage({this.auth, this.onSignOut, this.location, this.apiService});
   final BaseAuth auth;
   final VoidCallback onSignOut;
   final LocationService location;
+  final ApiService apiService;
   @override
   _HomePageState createState() =>
       _HomePageState(auth: auth, onSignOut: onSignOut);
@@ -42,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _pages = [
-      EventsPage(location: widget.location),
+      EventsPage(location: widget.location, apiService: widget.apiService),
       FindPage(location: widget.location),
       ProfilePage(),
     ];

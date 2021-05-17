@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:actevents/routes/user/loginPage.dart';
+import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/auth.dart';
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ enum AuthStatus {
 class _RootPageState extends State<RootPage> {
   AuthStatus authStatus = AuthStatus.notSignedIn;
 
+  ApiService _apiService;
   initState() {
     super.initState();
     checkLogin();
@@ -32,6 +34,8 @@ class _RootPageState extends State<RootPage> {
   void checkLogin() async {
     try {
       var result = await widget.auth.currentUser();
+      var token = await widget.auth.getIdToken();
+      _apiService = ApiService(idToken: token);
       setState(() {
         authStatus = AuthStatus.signedIn;
       });
@@ -62,6 +66,7 @@ class _RootPageState extends State<RootPage> {
         return new HomePage(
             auth: widget.auth,
             location: widget.location,
+            apiService: _apiService,
             onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn));
     }
   }

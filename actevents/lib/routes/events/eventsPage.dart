@@ -9,22 +9,24 @@ import 'package:actevents/services/locationService.dart';
 import 'package:geolocator/geolocator.dart';
 
 class EventsPage extends StatefulWidget {
-  EventsPage({this.location});
+  EventsPage({this.location, this.apiService});
 
+  final ApiService apiService;
   final LocationService location;
   @override
   _EventsPage createState() => _EventsPage();
 }
 
 class _EventsPage extends State<EventsPage> {
-  //TODO: check save statemanagement when navigating from widget
+
+
 
   double _distance = 10;
   Position _data;
   Future<List<Actevent>> _events;
   bool _filterOptionsExpanded = false;
 
-  ApiService apiService = ApiService();
+
 
   @override
   void initState() {
@@ -72,7 +74,7 @@ class _EventsPage extends State<EventsPage> {
     String latitude = pos.latitude.toString();
     String longitude = pos.longitude.toString();
     print("Getting events for $latitude, $longitude and $_distance");
-    return await apiService.getEventsInArea(
+    return await widget.apiService.getEventsInArea(
         latitude, longitude, _distance.round());
     // return await apiService.getLocalTestList();
   }

@@ -8,10 +8,13 @@ import 'dart:convert';
 import 'package:uuid/uuid.dart';
 
 class ApiService {
+  ApiService({this.idToken}) {
+    _headers.putIfAbsent('Authorization' , () => idToken);
+  }
+  final String idToken;
+
   String _baseUrl = 'qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
-  Map<String, String> _headers = {
-    'x-api-key': '2aZ4yPAsNR1WCzQH1PxUh7tGD6o2E5YW2TZuM4IT'
-  };
+  Map<String, String> _headers = { };
 
   Future<List<Actevent>> getEventsInArea(
       String latitude, String longitude, int distance) async {
@@ -20,7 +23,7 @@ class ApiService {
       'latitude': latitude,
       'distance': distance.toString()
     };
-    var uri = Uri.https(this._baseUrl, '/default' + '/events', queryParameters);
+    var uri = Uri.https(this._baseUrl, '/test' + '/events', queryParameters);
 
     http.Response response = await http.get(uri, headers: this._headers);
 
