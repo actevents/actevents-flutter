@@ -21,7 +21,7 @@ class ApiService {
     Map<String, dynamic> queryParameters = {
       'longitude': longitude,
       'latitude': latitude,
-      'distance': distance.toString()
+      'radius': distance.toString()
     };
     var uri = Uri.https(this._baseUrl, '/test' + '/events', queryParameters);
 
