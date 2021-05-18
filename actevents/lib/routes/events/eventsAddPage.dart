@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:actevents/helpers/dateTimePicker.dart';
+import 'package:actevents/helpers/picturePreviewScreen.dart';
+import 'package:camera/camera.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 
@@ -110,10 +115,35 @@ class _EventsAddPageState extends State<EventsAddPage> {
         // ----------------------------------
         // ---------- Images ----------------
         _drawDivider(),
-        Text("Bilder", textAlign: TextAlign.center)
+        Text("Bilder", textAlign: TextAlign.center),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.2,
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: CarouselSlider(
+            items: [
+              OutlinedButton(
+                  onPressed: _takePicture,
+                  child: Container(width: 100, child: Icon(Icons.add_a_photo)))
+            ],
+            options: CarouselOptions(
+                enableInfiniteScroll: false,
+                initialPage: 0,
+                scrollDirection: Axis.horizontal),
+          ),
+        )
       ].where(notNull).toList(),
       padding: const EdgeInsets.all(borderPadding),
     );
+  }
+
+  Future<String> _takePicture() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final cameras = await availableCameras();
+    final camera = cameras.first;
+    Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+      var cameraPreview = PicturePreviewScreen(camera: camera);
+      return cameraPreview;
+    }));
   }
 
   Widget _drawDivider() {
