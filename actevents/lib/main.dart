@@ -1,7 +1,6 @@
 import 'package:actevents/routes/rootPage.dart';
 import 'package:actevents/services/auth.dart';
 import 'package:actevents/services/locationService.dart';
-import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(home: MyApp()));

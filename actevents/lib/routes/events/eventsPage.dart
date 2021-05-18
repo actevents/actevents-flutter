@@ -131,11 +131,7 @@ class _EventsPage extends State<EventsPage> {
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
         title: Text(event.name),
-        subtitle: Text("Position: " +
-            event?.latitude +
-            ", " +
-            event?.longitude +
-            " / Abstand: " +
+        subtitle: Text("Abstand zur derzeitigen Position " +
             event.distance.round().toString() +
             "km"),
         onTap: () {
