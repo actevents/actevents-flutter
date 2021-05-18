@@ -141,7 +141,9 @@ class _EventsPage extends State<EventsPage> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (c) {
             return EventsDetailPage(
-                eventId: event.id, apiService: widget.apiService);
+                eventId: event.id,
+                apiService: widget.apiService,
+                location: _data);
           }));
         },
       ),

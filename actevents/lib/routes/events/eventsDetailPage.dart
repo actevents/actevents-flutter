@@ -3,13 +3,15 @@ import 'package:actevents/services/apiService.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
 class EventsDetailPage extends StatefulWidget {
   final String eventId;
   final ApiService apiService;
+  final Position location;
 
-  EventsDetailPage({this.eventId, this.apiService}) {}
+  EventsDetailPage({this.eventId, this.apiService, this.location}) {}
 
   @override
   _EventsDetailPageState createState() => _EventsDetailPageState();
@@ -22,7 +24,10 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   }
 
   Future<Actevent> loadEvent() async {
-    var res=  await widget.apiService.getEventById(widget.eventId);
+    var res = await widget.apiService.getEventById(
+        widget.eventId,
+        widget.location.latitude.toString(),
+        widget.location.longitude.toString());
     return res;
   }
 
@@ -104,7 +109,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                           child: Text(snapshot.data.description),
                           margin: EdgeInsets.all(20),
                         )
-                        
+
                         // Text("Distanz zum aktuellen Standort: " +
                         //     snapshot.data.distance.round().toString() +
                         //     "km"),
@@ -114,8 +119,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                 ],
               );
             }
-            if(snapshot.hasError)
-            {
+            if (snapshot.hasError) {
               return Text("Es ist etwas beim Laden schief gegangen :(");
             }
             return Text("Lade Event");
