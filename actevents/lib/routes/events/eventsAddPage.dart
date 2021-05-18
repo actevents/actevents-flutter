@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:actevents/helpers/dateTimePicker.dart';
@@ -21,6 +22,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
     _longitudeController = TextEditingController();
   }
 
+  final List<String> _pictureList = <String>[];
   final _formKey = GlobalKey<FormState>();
   bool notNull(Object o) => o != null;
 
@@ -120,11 +122,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
           height: MediaQuery.of(context).size.height * 0.2,
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: CarouselSlider(
-            items: [
-              OutlinedButton(
-                  onPressed: _takePicture,
-                  child: Container(width: 100, child: Icon(Icons.add_a_photo)))
-            ],
+            items: _buildCarouselList(),
             options: CarouselOptions(
                 enableInfiniteScroll: false,
                 initialPage: 0,
@@ -136,13 +134,21 @@ class _EventsAddPageState extends State<EventsAddPage> {
     );
   }
 
+  void _onPictureTaken(String path) {
+    log(path + " from callback");
+    setState(() {
+      _pictureList.add(path);
+    });
+  }
+
   Future<String> _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
     final camera = cameras.first;
+
     Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-      var cameraPreview = PicturePreviewScreen(camera: camera);
-      return cameraPreview;
+      return PicturePreviewScreen(
+          camera: camera, onPictureTaken: _onPictureTaken);
     }));
   }
 
@@ -161,5 +167,16 @@ class _EventsAddPageState extends State<EventsAddPage> {
           title: Text("Event hinzufügen"),
         ),
         body: Form(key: _formKey, child: _buildForm()));
+  }
+
+  List<Widget> _buildCarouselList() {
+    List<Widget> widgets = <Widget>[];
+    widgets.add(OutlinedButton(
+        onPressed: _takePicture,
+        child: Container(width: 100, child: Icon(Icons.add_a_photo))));
+    for (var path in _pictureList) {
+      widgets.add(Image(image: FileImage(File(path),scale: 1)));
+    }
+    return widgets;
   }
 }
