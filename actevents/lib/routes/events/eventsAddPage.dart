@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:actevents/helpers/dateTimePicker.dart';
@@ -136,13 +137,18 @@ class _EventsAddPageState extends State<EventsAddPage> {
     );
   }
 
+  void _onPictureTaken(String path) {
+    log(path + " from callback");
+  }
+
   Future<String> _takePicture() async {
     WidgetsFlutterBinding.ensureInitialized();
     final cameras = await availableCameras();
     final camera = cameras.first;
+
     Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-      var cameraPreview = PicturePreviewScreen(camera: camera);
-      return cameraPreview;
+      return PicturePreviewScreen(
+          camera: camera, onPictureTaken: _onPictureTaken);
     }));
   }
 

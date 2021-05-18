@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+typedef void OnPictureTaken(String path);
+
 class PicturePreviewScreen extends StatefulWidget {
   final CameraDescription camera;
   const PicturePreviewScreen({
     Key key,
     @required this.camera,
+    this.onPictureTaken
   }) : super(key: key);
-
+  final OnPictureTaken onPictureTaken;
   @override
   _PicturePreviewScreenState createState() => _PicturePreviewScreenState();
 }
@@ -34,14 +37,14 @@ class _PicturePreviewScreenState extends State<PicturePreviewScreen> {
     super.dispose();
   }
 
-  Future<String> _takePicture() async {
+  Future _takePicture() async {
     try {
       await _initializeControllerFuture;
       Directory tempDir = await getTemporaryDirectory();
       String tempPath = tempDir.path;
       tempPath = tempPath + '/' + Uuid().v4() + '.jpg';
       await _controller.takePicture(tempPath);
-      return tempPath;
+      widget.onPictureTaken(tempPath);
     } catch (e) {
       // better error handling here
       print(e);
@@ -67,8 +70,7 @@ class _PicturePreviewScreenState extends State<PicturePreviewScreen> {
         child: Icon(Icons.camera_alt_outlined),
         onPressed: () async {
           print("Taking picture");
-          String picturePath = await _takePicture();
-          print("Picture saved at ${picturePath}");
+          await _takePicture();
         },
       ),
     );
