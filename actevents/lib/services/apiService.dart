@@ -9,21 +9,22 @@ import 'package:uuid/uuid.dart';
 
 class ApiService {
   ApiService({this.idToken}) {
-    _headers.putIfAbsent('Authorization' , () => idToken);
+    _headers.putIfAbsent('Authorization', () => idToken);
   }
   final String idToken;
 
   String _baseUrl = 'api.actevents.de';
-  Map<String, String> _headers = { };
+  String _envPath = '/test';
+  Map<String, String> _headers = {};
 
   Future<List<Actevent>> getEventsInArea(
-      String latitude, String longitude, int distance) async {
+      String latitude, String longitude, int radius) async {
     Map<String, dynamic> queryParameters = {
       'longitude': longitude,
       'latitude': latitude,
-      'distance': distance.toString()
+      'radius': radius.toString()
     };
-    var uri = Uri.https(this._baseUrl, '/test' + '/events', queryParameters);
+    var uri = Uri.https(this._baseUrl, _envPath + '/events', queryParameters);
 
     http.Response response = await http.get(uri, headers: this._headers);
 
@@ -43,21 +44,28 @@ class ApiService {
     }
   }
 
-  Future<Actevent> getEventById(String id) async {
-      var uri = Uri.https(this._baseUrl, '/test' + '/events/' + id);
-      http.Response response = await http.get(uri, headers: this._headers);
-      if (response.statusCode == 200) {
-        dynamic body = jsonDecode(response.body);
-            return Actevent.fromJSON(body);
-      } else {
-        // TODO: error handling
-        print("Error ocured. Non 200 status code returned from api.");
-        print("Status code: " +
-            response.statusCode.toString() +
-            "\nBody: " +
-            response.body);
-        return null;
-      }
+  Future<Actevent> getEventById(
+      String id, String latitude, String longitude) async {
+    Map<String, dynamic> queryParameters = {
+      "latitude": latitude,
+      "longitude": longitude
+    };
+
+    var uri =
+        Uri.https(this._baseUrl, _envPath + '/events/' + id, queryParameters);
+    http.Response response = await http.get(uri, headers: this._headers);
+    if (response.statusCode == 200) {
+      dynamic body = jsonDecode(response.body);
+      return Actevent.fromJSON(body);
+    } else {
+      // TODO: error handling
+      print("Error ocured. Non 200 status code returned from api.");
+      print("Status code: " +
+          response.statusCode.toString() +
+          "\nBody: " +
+          response.body);
+      return null;
+    }
   }
 
   // Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});
