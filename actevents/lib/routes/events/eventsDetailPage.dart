@@ -122,7 +122,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             if (snapshot.hasError) {
               return Text("Es ist etwas beim Laden schief gegangen :(");
             }
-            return Text("Lade Event");
+            return Center(child: CircularProgressIndicator());
           },
           future: loadEvent(),
         ));

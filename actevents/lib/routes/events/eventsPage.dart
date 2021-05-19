@@ -38,17 +38,33 @@ class _EventsPage extends State<EventsPage> {
     setState(() {
       acteventList.forEach((actevent) {
         _markers.add(Marker(
-          width: 150.0,
-          height: 150.0,
-          point: LatLng.LatLng(double.parse(actevent.latitude),
-              double.parse(actevent.longitude)),
-          builder: (ctx) => Container(
-            child: Icon(
-              Icons.location_on,
-              color: Colors.red[700],
-            ),
-          ),
-        ));
+            width: 150.0,
+            height: 150.0,
+            point: LatLng.LatLng(double.parse(actevent.latitude),
+                double.parse(actevent.longitude)),
+            builder: (ctx) {
+              return GestureDetector(
+                child: Icon(
+                  Icons.location_on,
+                  color: Colors.red[700],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                    return EventsDetailPage(
+                        eventId: actevent.id,
+                        apiService: widget.apiService,
+                        location: Position(
+                            accuracy: 1,
+                            altitude: 0,
+                            floor: 0,
+                            heading: 0,
+                            isMocked: false,
+                            latitude: double.parse(actevent.latitude),
+                            longitude: double.parse(actevent.longitude)));
+                  }));
+                },
+              );
+            }));
       });
     });
   }
@@ -142,7 +158,7 @@ class _EventsPage extends State<EventsPage> {
     setState(() {
       _events = _fetchData();
     });
-      _events.then((list) => _mapMarkers(list));
+    _events.then((list) => _mapMarkers(list));
   }
 
   @override
