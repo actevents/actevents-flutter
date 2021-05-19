@@ -15,7 +15,7 @@ class ApiService {
 
   // String _baseUrl = 'api.actevents.de';
   // String _envPath = '/test';
-  String _baseUrl = 'https://qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
+  String _baseUrl = 'qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
   String _envPath = '/default';
 
   Map<String, String> _headers = {};
@@ -56,8 +56,8 @@ class ApiService {
       @required String latitude,
       @required String longitude}) async {
     var uri = Uri.https(this._baseUrl, _envPath + '/events');
-    http.Response response =
-        await http.post(uri, headers: this._headers, body: );
+    // http.Response response =
+    //     await http.post(uri, headers: this._headers, body: );
   }
 
   Future<Actevent> getEventById(

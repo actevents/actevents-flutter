@@ -7,8 +7,8 @@ class Actevent {
   String latitude;
   double distance;
   String description;
-  DateTime beginDate;
-  DateTime endDate;
+  String beginDate;
+  String endDate;
   List<String> tags;
 
   Actevent(
@@ -32,9 +32,9 @@ class Actevent {
         latitude:
             (json["location"] as Map<String, dynamic>)["latitude"] as String,
         distance: json["distance"],
-        beginDate: (json["dates"] as Map<String, dynamic>)["begin"] as DateTime,
-        endDate: (json["dates"] as Map<String, dynamic>)["begin"] as DateTime,
-        tags: json["tags"] as List<String>);
+        beginDate: (json["dates"] as Map<String, dynamic>)["begin"] as String,
+        endDate: (json["dates"] as Map<String, dynamic>)["begin"] as String,
+        tags: json["tags"] as List<dynamic>);
   }
 
   factory Actevent.toJSON(Actevent actevent) {}
