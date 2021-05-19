@@ -108,11 +108,11 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                         Container(
                           child: Text(snapshot.data.description),
                           margin: EdgeInsets.all(20),
-                        )
+                        ),
 
-                        // Text("Distanz zum aktuellen Standort: " +
-                        //     snapshot.data.distance.round().toString() +
-                        //     "km"),
+                        Text("Distanz zum aktuellen Standort: " +
+                            snapshot.data.distance.round().toString() +
+                            "km"),
                       ],
                     ),
                   )
