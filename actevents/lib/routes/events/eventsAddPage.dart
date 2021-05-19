@@ -29,6 +29,9 @@ class _EventsAddPageState extends State<EventsAddPage> {
     _longitudeController = TextEditingController();
   }
 
+  DateTime begin;
+  DateTime end;
+
   final List<String> _pictureList = <String>[];
   final _formKey = GlobalKey<FormState>();
   bool notNull(Object o) => o != null;
@@ -42,6 +45,14 @@ class _EventsAddPageState extends State<EventsAddPage> {
   TextEditingController _priceController;
   TextEditingController _latitudeController;
   TextEditingController _longitudeController;
+
+  void _onChangeBegin(DateTime begin) {
+    this.begin = begin;
+  }
+
+  void _onChangeEnd(DateTime end) {
+    this.end = end;
+  }
 
   DateTimePicker _endDateTimePicker = DateTimePicker(
     key: Key("addEventFormEndDateTime"),
@@ -208,7 +219,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
           description: _descriptionController.text,
           latitude: _latitudeController.text,
           longitude: _longitudeController.text);
-          // beginDate: _startDateTimePicker);
+      // beginDate: _startDateTimePicker);
 
       widget.apiService.createNewEvent(actevent);
     }
