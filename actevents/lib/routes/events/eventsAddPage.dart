@@ -185,6 +185,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
             options: CarouselOptions(
                 enableInfiniteScroll: false,
                 initialPage: 0,
+                viewportFraction: 0.4,
                 scrollDirection: Axis.horizontal),
           ),
         ),

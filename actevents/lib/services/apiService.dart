@@ -81,7 +81,7 @@ class ApiService {
           response.statusCode.toString() +
           "\nBody: " +
           response.body);
-      return null;
+      throw ErrorDescription("Non 200 status code received from api");
     }
   }
 
