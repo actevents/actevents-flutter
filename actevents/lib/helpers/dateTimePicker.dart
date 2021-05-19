@@ -4,7 +4,9 @@ import 'package:intl/intl.dart';
 
 class DateTimePicker extends StatefulWidget {
   final String dateTimeLabel;
-  const DateTimePicker({Key key, this.dateTimeLabel}) : super(key: key);
+  final bool defaultValidator;
+  const DateTimePicker({Key key, this.dateTimeLabel, this.defaultValidator})
+      : super(key: key);
 
   @override
   _DateTimePickerState createState() => _DateTimePickerState();
@@ -18,6 +20,8 @@ class _DateTimePickerState extends State<DateTimePicker> {
   }
 
   String _dateTimeLabel;
+
+  bool _defaultValidator;
 
   TextEditingController _dateController;
   TextEditingController _timeController;
@@ -99,6 +103,12 @@ class _DateTimePickerState extends State<DateTimePicker> {
               _selectDate(context);
             },
             controller: _dateController,
+            validator: (value) {
+              if (widget.defaultValidator && (value == null || value.isEmpty)) {
+                return "Datum darf nicht leer sein";
+              }
+              return null;
+            },
             // enabled: false,
           ),
           TextFormField(
@@ -109,6 +119,12 @@ class _DateTimePickerState extends State<DateTimePicker> {
               _selectTime(context);
             },
             controller: _timeController,
+            validator: (value) {
+              if (widget.defaultValidator && (value == null || value.isEmpty)) {
+                return "Uhrzeit darf nicht leer sein";
+              }
+              return null;
+            },
             // enabled: false,
           )
         ],

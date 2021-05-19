@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:actevents/models/actevent.dart';
-import 'package:actevents/routes/rootPage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,8 +13,11 @@ class ApiService {
   }
   final String idToken;
 
-  String _baseUrl = 'api.actevents.de';
-  String _envPath = '/test';
+  // String _baseUrl = 'api.actevents.de';
+  // String _envPath = '/test';
+  String _baseUrl = 'https://qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
+  String _envPath = '/default';
+
   Map<String, String> _headers = {};
 
   Future<List<Actevent>> getEventsInArea(
@@ -42,6 +45,19 @@ class ApiService {
           response.body);
       return [];
     }
+  }
+
+  void createNewEvent(
+      {@required name: String,
+      @required description: String,
+      @required price: double,
+      @required DateTime startDate,
+      @required DateTime endDate,
+      @required String latitude,
+      @required String longitude}) async {
+    var uri = Uri.https(this._baseUrl, _envPath + '/events');
+    http.Response response =
+        await http.post(uri, headers: this._headers, body: );
   }
 
   Future<Actevent> getEventById(

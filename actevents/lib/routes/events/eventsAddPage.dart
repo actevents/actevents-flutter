@@ -7,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:flutter_tagging/flutter_tagging.dart';
 
 class EventsAddPage extends StatefulWidget {
   @override
@@ -28,6 +29,8 @@ class _EventsAddPageState extends State<EventsAddPage> {
 
   bool _paidEvent = false;
 
+  List<String> _selectedTags = [];
+
   TextEditingController _nameController;
   TextEditingController _descriptionController;
   TextEditingController _priceController;
@@ -47,6 +50,12 @@ class _EventsAddPageState extends State<EventsAddPage> {
               hintText: "Wie soll das Event heißen?",
               labelText: "Name *"),
           controller: _nameController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Bitte einen Namen angeben';
+            }
+            return null;
+          },
         ),
         TextFormField(
           key: Key("addEventFormDescription"),
@@ -56,6 +65,12 @@ class _EventsAddPageState extends State<EventsAddPage> {
               labelText: "Beschreibung *"),
           controller: _descriptionController,
           maxLines: 4,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Bitte eine Beschreibung des Events angeben';
+            }
+            return null;
+          },
         ),
         // ----------------------------------
         // ---------- Paid Event ------------
@@ -78,6 +93,12 @@ class _EventsAddPageState extends State<EventsAddPage> {
                     labelText: "Eintrittspreis *"),
                 controller: _priceController,
                 keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Bitte einen Eintrittspreis angeben";
+                  }
+                  return null;
+                },
               )
             : null,
         // ----------------------------------
@@ -86,11 +107,13 @@ class _EventsAddPageState extends State<EventsAddPage> {
         DateTimePicker(
           key: Key("addEventFormBeginDateTime"),
           dateTimeLabel: "Beginn",
+          defaultValidator: true,
         ),
         _drawDivider(),
         DateTimePicker(
           key: Key("addEventFormEndDateTime"),
           dateTimeLabel: "Ende",
+          defaultValidator: true,
         ),
         _drawDivider(),
         // ----------------------------------
@@ -103,6 +126,12 @@ class _EventsAddPageState extends State<EventsAddPage> {
         TextFormField(
           key: Key("addEventFormLatitude"),
           controller: _latitudeController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Bitte einen Wert für die Latitude angeben";
+            }
+            return null;
+          },
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
               icon: Icon(Icons.location_on_outlined), labelText: "Latitude *"),
@@ -110,6 +139,12 @@ class _EventsAddPageState extends State<EventsAddPage> {
         TextFormField(
           key: Key("addEventFormLongitude"),
           controller: _longitudeController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Bitte einen Wert für die Longitude angeben";
+            }
+            return null;
+          },
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
               icon: Icon(Icons.location_on_outlined), labelText: "Longitude *"),
@@ -128,10 +163,36 @@ class _EventsAddPageState extends State<EventsAddPage> {
                 initialPage: 0,
                 scrollDirection: Axis.horizontal),
           ),
-        )
+        ),
+
+        // ----------------------------------
+        // ------------ Tags ----------------
+        _drawDivider(),
+        Text("Tags", textAlign: TextAlign.center),
+        Container(
+          // height: MediaQuery.of(context).size.height * 0.2,
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          // child: FlutterTagging(
+          //     initialItems: _selectedTags,
+          //     findSuggestions: findSuggestions,
+          //     configureChip: configureChip,
+          //     configureSuggestion: configureSuggestion)
+          child: Text("Tags - WIP"),
+        ),
+        // ----------------------------------
+        // ------------ Submit --------------
+        _drawDivider(),
+        ElevatedButton(onPressed: _submitForm, child: Text("Event anlegen")),
       ].where(notNull).toList(),
       padding: const EdgeInsets.all(borderPadding),
     );
+  }
+
+  void _submitForm() {
+    print("submit form pressed");
+    if (_formKey.currentState.validate()) {
+      print("Send data to api");
+    }
   }
 
   void _onPictureTaken(String path) {
@@ -175,7 +236,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
         onPressed: _takePicture,
         child: Container(width: 100, child: Icon(Icons.add_a_photo))));
     for (var path in _pictureList) {
-      widgets.add(Image(image: FileImage(File(path),scale: 1)));
+      widgets.add(Image(image: FileImage(File(path), scale: 1)));
     }
     return widgets;
   }
