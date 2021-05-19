@@ -36,17 +36,26 @@ class _EventsPage extends State<EventsPage> {
     _markers = [];
     acteventList.forEach((actevent) {
       _markers.add(Marker(
-        width: 150.0,
-        height: 150.0,
-        point: LatLng.LatLng(
-            double.parse(actevent.latitude), double.parse(actevent.longitude)),
-        builder: (ctx) => Container(
-          child: Icon(
-            Icons.location_on,
-            color: Colors.red[700],
-          ),
-        ),
-      ));
+          width: 150.0,
+          height: 150.0,
+          point: LatLng.LatLng(double.parse(actevent.latitude),
+              double.parse(actevent.longitude)),
+          builder: (ctx) {
+            return GestureDetector(
+              child: Icon(
+                Icons.location_on,
+                color: Colors.red[700],
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                  return EventsDetailPage(
+                      eventId: actevent.id,
+                      apiService: widget.apiService,
+                      location: _data);
+                }));
+              },
+            );
+          }));
     });
   }
 
