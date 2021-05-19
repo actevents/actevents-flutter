@@ -15,7 +15,7 @@ class ApiService {
 
   // String _baseUrl = 'api.actevents.de';
   // String _envPath = '/test';
-  String _baseUrl = 'https://qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
+  String _baseUrl = 'qwsopzco8h.execute-api.eu-central-1.amazonaws.com';
   String _envPath = '/default';
 
   Map<String, String> _headers = {};
