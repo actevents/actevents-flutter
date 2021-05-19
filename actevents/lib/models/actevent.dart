@@ -37,5 +37,21 @@ class Actevent {
         tags: json["tags"] as List<String>);
   }
 
-  factory Actevent.toJSON(Actevent actevent) {}
+  Map<String, dynamic> acteventToJSON() {
+    var json = Map<String, dynamic>();
+    json['name'] = this.name;
+    json['description'] = this.description;
+
+    var jsonLocation = Map<String, dynamic>();
+    jsonLocation['latitude'] = this.latitude;
+    jsonLocation['longitude'] = this.longitude;
+    json['location'] = jsonLocation;
+
+    var jsonDates = Map<String, dynamic>();
+    jsonDates['begin'] = this.beginDate;
+    jsonDates['end'] = this.endDate;
+    json['dates'] = jsonDates;
+
+    json['tags'] = this.tags;
+  }
 }

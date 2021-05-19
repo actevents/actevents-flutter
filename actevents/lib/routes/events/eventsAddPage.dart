@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:actevents/helpers/dateTimePicker.dart';
 import 'package:actevents/helpers/picturePreviewScreen.dart';
+import 'package:actevents/models/actevent.dart';
+import 'package:actevents/services/apiService.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
@@ -10,6 +12,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
 
 class EventsAddPage extends StatefulWidget {
+  final ApiService apiService;
+
+  EventsAddPage({this.apiService}) {}
+
   @override
   _EventsAddPageState createState() => _EventsAddPageState();
 }
@@ -36,6 +42,18 @@ class _EventsAddPageState extends State<EventsAddPage> {
   TextEditingController _priceController;
   TextEditingController _latitudeController;
   TextEditingController _longitudeController;
+
+  DateTimePicker _endDateTimePicker = DateTimePicker(
+    key: Key("addEventFormEndDateTime"),
+    dateTimeLabel: "Ende",
+    defaultValidator: true,
+  );
+
+  DateTimePicker _startDateTimePicker = DateTimePicker(
+    key: Key("addEventFormBeginDateTime"),
+    dateTimeLabel: "Beginn",
+    defaultValidator: true,
+  );
 
   Widget _buildForm() {
     const double borderPadding = 15;
@@ -104,17 +122,9 @@ class _EventsAddPageState extends State<EventsAddPage> {
         // ----------------------------------
         // ---------- DateTime --------------
         _drawDivider(),
-        DateTimePicker(
-          key: Key("addEventFormBeginDateTime"),
-          dateTimeLabel: "Beginn",
-          defaultValidator: true,
-        ),
+        _startDateTimePicker,
         _drawDivider(),
-        DateTimePicker(
-          key: Key("addEventFormEndDateTime"),
-          dateTimeLabel: "Ende",
-          defaultValidator: true,
-        ),
+        _endDateTimePicker,
         _drawDivider(),
         // ----------------------------------
         // ---------- Location --------------
@@ -161,7 +171,6 @@ class _EventsAddPageState extends State<EventsAddPage> {
             options: CarouselOptions(
                 enableInfiniteScroll: false,
                 initialPage: 0,
-                
                 scrollDirection: Axis.horizontal),
           ),
         ),
@@ -193,6 +202,15 @@ class _EventsAddPageState extends State<EventsAddPage> {
     print("submit form pressed");
     if (_formKey.currentState.validate()) {
       print("Send data to api");
+
+      var actevent = Actevent(
+          name: _nameController.text,
+          description: _descriptionController.text,
+          latitude: _latitudeController.text,
+          longitude: _longitudeController.text,
+          beginDate: _startDateTimePicker);
+
+      widget.apiService.createNewEvent(actevent);
     }
   }
 
