@@ -1,20 +1,15 @@
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 typedef void GetDateTimeUpdate(DateTime datetime);
 
 class DateTimePicker extends StatefulWidget {
-
   final GetDateTimeUpdate onChange;
   final String dateTimeLabel;
   final bool defaultValidator;
 
-  void test() {
-    
-  }
-
-  const DateTimePicker({Key key, this.dateTimeLabel, this.defaultValidator,this.onChange})
+  const DateTimePicker(
+      {Key key, this.dateTimeLabel, this.defaultValidator, this.onChange})
       : super(key: key);
 
   @override
@@ -49,12 +44,11 @@ class _DateTimePickerState extends State<DateTimePicker> {
         initialDate: selectedDateTime,
         firstDate: DateTime.now(),
         lastDate: DateTime.now().add(const Duration(days: 365)));
-    if (picked != null)
-      widget.onChange(picked);
-      setState(() {
-        selectedDateTime = picked;
-        _dateController.text = "${picked.day}.${picked.month}.${picked.year}";
-      });
+    if (picked != null) widget.onChange(picked);
+    setState(() {
+      selectedDateTime = picked;
+      _dateController.text = "${picked.day}.${picked.month}.${picked.year}";
+    });
   }
 
   String _formatDate(DateTime dateTime) {
@@ -77,7 +71,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
         initialTime: TimeOfDay.fromDateTime(selectedDateTime));
     if (picked != null) {
       setState(() {
-         selectedDateTime = DateTime(
+        selectedDateTime = DateTime(
             selectedDateTime.year,
             selectedDateTime.month,
             selectedDateTime.day,

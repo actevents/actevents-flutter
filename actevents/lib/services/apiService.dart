@@ -47,12 +47,18 @@ class ApiService {
     }
   }
 
-  void createNewEvent(Actevent actevent) async {
+  Future<void> createNewEvent(Actevent actevent) async {
     var uri = Uri.https(this._baseUrl, _envPath + '/events');
-    http.Response response = await http.post(uri,
-        headers: this._headers, body: actevent.acteventToJSON());
+    var body = json.encode(actevent.acteventToJSON());
+    http.Response response =
+        await http.post(uri, headers: this._headers, body: body);
 
-    print(response.toString());
+    if (response.statusCode == 200) {
+      print("Event created successfully");
+    } else {
+      print("Non 200 status code received");
+      throw Error();
+    }
   }
 
   Future<Actevent> getEventById(

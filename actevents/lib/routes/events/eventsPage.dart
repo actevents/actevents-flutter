@@ -99,7 +99,9 @@ class _EventsPage extends State<EventsPage> {
             if (snapshot.hasError) {
               return Text("Die Karte könnte nicht geladen werden.");
             }
-            return Text("Lade Karte..");
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ));
   }
