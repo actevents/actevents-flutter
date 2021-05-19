@@ -48,8 +48,8 @@ class Actevent {
     json['location'] = jsonLocation;
 
     var jsonDates = Map<String, dynamic>();
-    jsonDates['begin'] = this.beginDate.toIso8601String();
-    jsonDates['end'] = this.endDate.toIso8601String();
+    jsonDates['begin'] = this.beginDate;
+    jsonDates['end'] = this.endDate;
     json['dates'] = jsonDates;
 
     json['tags'] = this.tags;
