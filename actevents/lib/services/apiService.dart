@@ -47,17 +47,10 @@ class ApiService {
     }
   }
 
-  void createNewEvent(
-      {@required name: String,
-      @required description: String,
-      @required price: double,
-      @required DateTime startDate,
-      @required DateTime endDate,
-      @required String latitude,
-      @required String longitude}) async {
+  void createNewEvent(Actevent actevent) async {
     var uri = Uri.https(this._baseUrl, _envPath + '/events');
-    // http.Response response =
-    //     await http.post(uri, headers: this._headers, body: );
+    http.Response response = await http.post(uri,
+        headers: this._headers, body: actevent.acteventToJSON());
   }
 
   Future<Actevent> getEventById(
