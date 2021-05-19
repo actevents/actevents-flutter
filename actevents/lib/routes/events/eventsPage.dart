@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import "package:latlong/latlong.dart" as LatLng;
 
 class EventsPage extends StatefulWidget {
   EventsPage({this.location, this.apiService});
@@ -19,12 +21,33 @@ class _EventsPage extends State<EventsPage> {
   double _distance = 50;
   Position _data;
   Future<List<Actevent>> _events;
+  List<Marker> _markers;
   bool _filterOptionsExpanded = false;
 
   @override
   void initState() {
+    _markers = [];
     _loadAsync();
     _events = _fetchData();
+    _events.then((value) => _mapMarkers(value));
+  }
+
+  void _mapMarkers(List<Actevent> acteventList) {
+    _markers = [];
+    acteventList.forEach((actevent) {
+      _markers.add(Marker(
+        width: 150.0,
+        height: 150.0,
+        point: LatLng.LatLng(
+            double.parse(actevent.latitude), double.parse(actevent.longitude)),
+        builder: (ctx) => Container(
+          child: Icon(
+            Icons.location_on,
+            color: Colors.red[700],
+          ),
+        ),
+      ));
+    });
   }
 
   void _loadAsync() async {
@@ -34,10 +57,27 @@ class _EventsPage extends State<EventsPage> {
     });
   }
 
-  void _sliderChanged(double newValue) {
+  void _sliderChanged(double sliderValue) {
     setState(() {
-      _distance = newValue;
+      _distance = sliderValue;
     });
+  }
+
+  Widget _mapElement() {
+    return Container(
+        height: MediaQuery.of(context).size.height * 0.3,
+        child: FlutterMap(
+          options: MapOptions(
+              zoom: 10.0,
+              center: LatLng.LatLng(_data.latitude, _data.longitude)),
+          layers: [
+            TileLayerOptions(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: ['a', 'b', 'c']),
+            MarkerLayerOptions(markers: _markers)
+          ],
+        ));
   }
 
   Widget _eventList() {
@@ -47,7 +87,6 @@ class _EventsPage extends State<EventsPage> {
             builder:
                 (BuildContext context, AsyncSnapshot<List<Actevent>> snapshot) {
               if (snapshot.hasData) {
-                print(snapshot.data);
                 return _displayEventList(snapshot.data);
               } else if (snapshot.hasError) {
                 return _statusTextWithReloadOption(
@@ -94,13 +133,18 @@ class _EventsPage extends State<EventsPage> {
   Future<void> _handleRefresh() async {
     setState(() {
       _events = _fetchData();
+      _events.then((list) => _mapMarkers(list));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [_filterOptionsPanel(), Expanded(child: _eventList())],
+      children: [
+        _filterOptionsPanel(),
+        _mapElement(),
+        Expanded(child: _eventList())
+      ],
     );
   }
 
