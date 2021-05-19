@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +22,6 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPage extends State<EventsPage> {
   double _distance = 50;
-  Position _data;
   Future<List<Actevent>> _events;
   List<Marker> _markers;
   bool _filterOptionsExpanded = false;
@@ -27,42 +29,43 @@ class _EventsPage extends State<EventsPage> {
   @override
   void initState() {
     _markers = [];
-    _loadAsync();
     _events = _fetchData();
     _events.then((value) => _mapMarkers(value));
   }
 
   void _mapMarkers(List<Actevent> acteventList) {
     _markers = [];
-    acteventList.forEach((actevent) {
-      _markers.add(Marker(
-          width: 150.0,
-          height: 150.0,
-          point: LatLng.LatLng(double.parse(actevent.latitude),
-              double.parse(actevent.longitude)),
-          builder: (ctx) {
-            return GestureDetector(
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red[700],
-              ),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-                  return EventsDetailPage(
-                      eventId: actevent.id,
-                      apiService: widget.apiService,
-                      location: _data);
-                }));
-              },
-            );
-          }));
-    });
-  }
-
-  void _loadAsync() async {
-    var data = await widget.location.getLocation();
     setState(() {
-      _data = data;
+      acteventList.forEach((actevent) {
+        _markers.add(Marker(
+            width: 150.0,
+            height: 150.0,
+            point: LatLng.LatLng(double.parse(actevent.latitude),
+                double.parse(actevent.longitude)),
+            builder: (ctx) {
+              return GestureDetector(
+                child: Icon(
+                  Icons.location_on,
+                  color: Colors.red[700],
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (c) {
+                    return EventsDetailPage(
+                        eventId: actevent.id,
+                        apiService: widget.apiService,
+                        location: Position(
+                            accuracy: 1,
+                            altitude: 0,
+                            floor: 0,
+                            heading: 0,
+                            isMocked: false,
+                            latitude: double.parse(actevent.latitude),
+                            longitude: double.parse(actevent.longitude)));
+                  }));
+                },
+              );
+            }));
+      });
     });
   }
 
@@ -75,17 +78,29 @@ class _EventsPage extends State<EventsPage> {
   Widget _mapElement() {
     return Container(
         height: MediaQuery.of(context).size.height * 0.3,
-        child: FlutterMap(
-          options: MapOptions(
-              zoom: 10.0,
-              center: LatLng.LatLng(_data.latitude, _data.longitude)),
-          layers: [
-            TileLayerOptions(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c']),
-            MarkerLayerOptions(markers: _markers)
-          ],
+        child: FutureBuilder<Position>(
+          future: (() async => await widget.location.getLocation())(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return FlutterMap(
+                options: MapOptions(
+                    zoom: 12.0,
+                    center: LatLng.LatLng(
+                        snapshot.data.latitude, snapshot.data.longitude)),
+                layers: [
+                  TileLayerOptions(
+                      urlTemplate:
+                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      subdomains: ['a', 'b', 'c']),
+                  MarkerLayerOptions(markers: _markers)
+                ],
+              );
+            }
+            if (snapshot.hasError) {
+              return Text("Die Karte könnte nicht geladen werden.");
+            }
+            return Text("Lade Karte..");
+          },
         ));
   }
 
@@ -142,8 +157,8 @@ class _EventsPage extends State<EventsPage> {
   Future<void> _handleRefresh() async {
     setState(() {
       _events = _fetchData();
-      _events.then((list) => _mapMarkers(list));
     });
+    _events.then((list) => _mapMarkers(list));
   }
 
   @override
@@ -192,7 +207,14 @@ class _EventsPage extends State<EventsPage> {
             return EventsDetailPage(
                 eventId: event.id,
                 apiService: widget.apiService,
-                location: _data);
+                location: Position(
+                    accuracy: 1,
+                    altitude: 0,
+                    floor: 0,
+                    heading: 0,
+                    isMocked: false,
+                    latitude: double.parse(event.latitude),
+                    longitude: double.parse(event.longitude)));
           }));
         },
       ),
