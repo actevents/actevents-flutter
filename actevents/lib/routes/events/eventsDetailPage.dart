@@ -120,7 +120,12 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
               );
             }
             if (snapshot.hasError) {
-              return Text("Es ist etwas beim Laden schief gegangen :(");
+              return Center(
+                child: Text(
+                    "Daten konnten nicht geladen werden. Bitte versuchen Sie es später erneut!",
+                    style: TextStyle(color: Colors.grey),
+                    textAlign: TextAlign.center),
+              );
             }
             return Center(child: CircularProgressIndicator());
           },
