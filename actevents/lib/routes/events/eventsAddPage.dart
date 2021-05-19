@@ -207,8 +207,8 @@ class _EventsAddPageState extends State<EventsAddPage> {
           name: _nameController.text,
           description: _descriptionController.text,
           latitude: _latitudeController.text,
-          longitude: _longitudeController.text,
-          beginDate: _startDateTimePicker);
+          longitude: _longitudeController.text);
+          // beginDate: _startDateTimePicker);
 
       widget.apiService.createNewEvent(actevent);
     }

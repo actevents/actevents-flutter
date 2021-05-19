@@ -9,7 +9,7 @@ class Actevent {
   String description;
   String beginDate;
   String endDate;
-  List<String> tags;
+  List<dynamic> tags;
 
   Actevent(
       {this.id,
