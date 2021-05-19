@@ -51,6 +51,8 @@ class ApiService {
     var uri = Uri.https(this._baseUrl, _envPath + '/events');
     http.Response response = await http.post(uri,
         headers: this._headers, body: actevent.acteventToJSON());
+
+    print(response.toString());
   }
 
   Future<Actevent> getEventById(

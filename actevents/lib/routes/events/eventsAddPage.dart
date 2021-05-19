@@ -54,19 +54,22 @@ class _EventsAddPageState extends State<EventsAddPage> {
     this.end = end;
   }
 
-  DateTimePicker _endDateTimePicker = DateTimePicker(
-    key: Key("addEventFormEndDateTime"),
-    dateTimeLabel: "Ende",
-    defaultValidator: true,
-  );
+  DateTimePicker _endDateTimePicker;
 
-  DateTimePicker _startDateTimePicker = DateTimePicker(
-    key: Key("addEventFormBeginDateTime"),
-    dateTimeLabel: "Beginn",
-    defaultValidator: true,
-  );
+  DateTimePicker _startDateTimePicker;
 
   Widget _buildForm() {
+    _startDateTimePicker = DateTimePicker(
+        key: Key("addEventFormBeginDateTime"),
+        dateTimeLabel: "Beginn",
+        defaultValidator: true,
+        onChange: _onChangeBegin);
+    _endDateTimePicker = DateTimePicker(
+      key: Key("addEventFormEndDateTime"),
+      dateTimeLabel: "Ende",
+      defaultValidator: true,
+      onChange: _onChangeEnd,
+    );
     const double borderPadding = 15;
     return ListView(
       key: Key("addEventFormListView"),
@@ -221,7 +224,11 @@ class _EventsAddPageState extends State<EventsAddPage> {
           longitude: _longitudeController.text);
       // beginDate: _startDateTimePicker);
 
+      try {
       widget.apiService.createNewEvent(actevent);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 

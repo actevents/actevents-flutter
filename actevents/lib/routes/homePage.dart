@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-                  return EventsAddPage();
+                  return EventsAddPage(apiService: widget.apiService);
                 }));
               },
               child: Text(
