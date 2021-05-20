@@ -23,6 +23,8 @@ class EventsDetailPage extends StatefulWidget {
 }
 
 class _EventsDetailPageState extends State<EventsDetailPage> {
+  bool notNull(Object o) => o != null;
+
   @override
   void initState() {
     super.initState();
@@ -87,17 +89,13 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                     items: <Widget>[
                       _showMapLocation(double.parse(snapshot.data.latitude),
                           double.parse(snapshot.data.longitude)),
-                      Image(
-                        image: NetworkImage(
-                            "https://via.placeholder.com/720x720.png?text=This+placeholder+was+brought+to+you+by+the+lacking+backend",
-                            scale: 1),
-                      ),
-                      Image(
-                        image: NetworkImage(
-                            "https://via.placeholder.com/720x720.png?text=This+placeholder+was+brought+to+you+by+the+lacking+backend",
-                            scale: 1),
-                      ),
-                    ],
+                      snapshot.data.imageUrl == null
+                          ? null
+                          : Image(
+                              image: NetworkImage(snapshot.data.imageUrl,
+                                  scale: 1),
+                            ),
+                    ].where(notNull).toList(),
                     options: CarouselOptions(
                       enableInfiniteScroll: false,
                       initialPage: selectedPage,

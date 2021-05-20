@@ -11,6 +11,7 @@ class Actevent {
   DateTime endDate;
   List<dynamic> tags;
   double price = 0.0;
+  String imageUrl;
 
   Actevent(
       {this.id,
@@ -22,7 +23,8 @@ class Actevent {
       this.beginDate,
       this.endDate,
       this.tags,
-      this.price});
+      this.price,
+      this.imageUrl});
 
   factory Actevent.fromJSON(Map<String, dynamic> json) {
     return Actevent(
@@ -38,13 +40,14 @@ class Actevent {
             DateTime.parse((json["dates"] as Map<String, dynamic>)["begin"]),
         endDate:
             DateTime.parse((json["dates"] as Map<String, dynamic>)["begin"]),
-        tags: json["tags"] as List<dynamic>);
+        tags: json["tags"] as List<dynamic>,
+        imageUrl: json["s3BucketUrl"]);
   }
 
   Map<String, dynamic> acteventToJSON() {
     var json = Map<String, dynamic>();
-    json['name'] = this.name;
-    json['description'] = this.description;
+    json['name'] = this.name ?? '';
+    json['description'] = this.description ?? '';
 
     var jsonLocation = Map<String, dynamic>();
     jsonLocation['latitude'] = this.latitude;
@@ -56,8 +59,8 @@ class Actevent {
     jsonDates['end'] = this.endDate.toIso8601String() + 'Z';
     json['dates'] = jsonDates;
 
-    json['tags'] = this.tags;
-    json['price'] = this.price;
+    json['tags'] = this.tags ?? [];
+    json['price'] = this.price ?? 0.0;
 
     return json;
   }
