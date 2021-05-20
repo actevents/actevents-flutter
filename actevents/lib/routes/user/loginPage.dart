@@ -195,15 +195,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
         backgroundColor: Colors.grey[300],
         body:
-
-            // SafeArea(
-            //   child: FlutterLogin(
-            //       onLogin: _signIn,
-            //       onSignup: _registerUser,
-            //       onRecoverPassword: (_) => null,
-            //       title: 'Flutter Amplify'),
-            // ));
-
             new SingleChildScrollView(
                 child: new Container(
                     padding: const EdgeInsets.all(16.0),
