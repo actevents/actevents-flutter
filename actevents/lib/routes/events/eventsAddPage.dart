@@ -29,8 +29,8 @@ class _EventsAddPageState extends State<EventsAddPage> {
     _longitudeController = TextEditingController();
   }
 
-  DateTime begin;
-  DateTime end;
+  DateTime _begin;
+  DateTime _end;
 
   final List<String> _pictureList = <String>[];
   final _formKey = GlobalKey<FormState>();
@@ -47,11 +47,11 @@ class _EventsAddPageState extends State<EventsAddPage> {
   TextEditingController _longitudeController;
 
   void _onChangeBegin(DateTime begin) {
-    this.begin = begin;
+    this._begin = begin;
   }
 
   void _onChangeEnd(DateTime end) {
-    this.end = end;
+    this._end = end;
   }
 
   DateTimePicker _endDateTimePicker;
@@ -185,6 +185,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
             options: CarouselOptions(
                 enableInfiniteScroll: false,
                 initialPage: 0,
+                viewportFraction: 0.4,
                 scrollDirection: Axis.horizontal),
           ),
         ),
@@ -212,7 +213,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     print("submit form pressed");
     if (_formKey.currentState.validate()) {
       print("Send data to api");
@@ -221,12 +222,20 @@ class _EventsAddPageState extends State<EventsAddPage> {
           name: _nameController.text,
           description: _descriptionController.text,
           latitude: _latitudeController.text,
-          longitude: _longitudeController.text);
-      // beginDate: _startDateTimePicker);
+          longitude: _longitudeController.text,
+          endDate: _end,
+          beginDate: _begin,
+          tags: []);
 
       try {
-      widget.apiService.createNewEvent(actevent);
+        await widget.apiService.createNewEvent(actevent);
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: const Text("Event erfolgreich angelegt.")));
       } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text(
+                "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.")));
         print(e);
       }
     }

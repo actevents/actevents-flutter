@@ -7,9 +7,11 @@ class Actevent {
   String latitude;
   double distance;
   String description;
-  String beginDate;
-  String endDate;
+  DateTime beginDate;
+  DateTime endDate;
   List<dynamic> tags;
+  double price = 0.0;
+  String imageUrl;
 
   Actevent(
       {this.id,
@@ -20,7 +22,9 @@ class Actevent {
       this.description,
       this.beginDate,
       this.endDate,
-      this.tags});
+      this.tags,
+      this.price,
+      this.imageUrl});
 
   factory Actevent.fromJSON(Map<String, dynamic> json) {
     return Actevent(
@@ -32,15 +36,18 @@ class Actevent {
         latitude:
             (json["location"] as Map<String, dynamic>)["latitude"] as String,
         distance: json["distance"],
-        beginDate: (json["dates"] as Map<String, dynamic>)["begin"] as String,
-        endDate: (json["dates"] as Map<String, dynamic>)["begin"] as String,
-        tags: json["tags"] as List<dynamic>);
+        beginDate:
+            DateTime.parse((json["dates"] as Map<String, dynamic>)["begin"]),
+        endDate:
+            DateTime.parse((json["dates"] as Map<String, dynamic>)["begin"]),
+        tags: json["tags"] as List<dynamic>,
+        imageUrl: json["s3BucketUrl"]);
   }
 
   Map<String, dynamic> acteventToJSON() {
     var json = Map<String, dynamic>();
-    json['name'] = this.name;
-    json['description'] = this.description;
+    json['name'] = this.name ?? '';
+    json['description'] = this.description ?? '';
 
     var jsonLocation = Map<String, dynamic>();
     jsonLocation['latitude'] = this.latitude;
@@ -48,10 +55,13 @@ class Actevent {
     json['location'] = jsonLocation;
 
     var jsonDates = Map<String, dynamic>();
-    jsonDates['begin'] = this.beginDate;
-    jsonDates['end'] = this.endDate;
+    jsonDates['begin'] = this.beginDate.toIso8601String() + 'Z';
+    jsonDates['end'] = this.endDate.toIso8601String() + 'Z';
     json['dates'] = jsonDates;
 
-    json['tags'] = this.tags;
+    json['tags'] = this.tags ?? [];
+    json['price'] = this.price ?? 0.0;
+
+    return json;
   }
 }

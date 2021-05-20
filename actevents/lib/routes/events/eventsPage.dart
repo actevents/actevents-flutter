@@ -51,16 +51,18 @@ class _EventsPage extends State<EventsPage> {
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (c) {
                     return EventsDetailPage(
-                        eventId: actevent.id,
-                        apiService: widget.apiService,
-                        location: Position(
-                            accuracy: 1,
-                            altitude: 0,
-                            floor: 0,
-                            heading: 0,
-                            isMocked: false,
-                            latitude: double.parse(actevent.latitude),
-                            longitude: double.parse(actevent.longitude)));
+                      eventId: actevent.id,
+                      apiService: widget.apiService,
+                      location: Position(
+                          accuracy: 1,
+                          altitude: 0,
+                          floor: 0,
+                          heading: 0,
+                          isMocked: false,
+                          latitude: double.parse(actevent.latitude),
+                          longitude: double.parse(actevent.longitude)),
+                      locationService: widget.location,
+                    );
                   }));
                 },
               );
@@ -99,7 +101,9 @@ class _EventsPage extends State<EventsPage> {
             if (snapshot.hasError) {
               return Text("Die Karte könnte nicht geladen werden.");
             }
-            return Text("Lade Karte..");
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           },
         ));
   }
@@ -205,16 +209,18 @@ class _EventsPage extends State<EventsPage> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (c) {
             return EventsDetailPage(
-                eventId: event.id,
-                apiService: widget.apiService,
-                location: Position(
-                    accuracy: 1,
-                    altitude: 0,
-                    floor: 0,
-                    heading: 0,
-                    isMocked: false,
-                    latitude: double.parse(event.latitude),
-                    longitude: double.parse(event.longitude)));
+              eventId: event.id,
+              apiService: widget.apiService,
+              location: Position(
+                  accuracy: 1,
+                  altitude: 0,
+                  floor: 0,
+                  heading: 0,
+                  isMocked: false,
+                  latitude: double.parse(event.latitude),
+                  longitude: double.parse(event.longitude)),
+              locationService: widget.location,
+            );
           }));
         },
       ),
