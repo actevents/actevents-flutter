@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:actevents/helpers/dateTimePicker.dart';
@@ -12,9 +11,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:geocoder/model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
 class EventsAddPage extends StatefulWidget {
@@ -35,6 +33,8 @@ class _EventsAddPageState extends State<EventsAddPage> {
     _latitudeController = TextEditingController();
     _longitudeController = TextEditingController();
   }
+
+  Marker _positionMarker = null;
 
   DateTime _begin;
   DateTime _end;
@@ -64,6 +64,18 @@ class _EventsAddPageState extends State<EventsAddPage> {
   DateTimePicker _endDateTimePicker;
 
   DateTimePicker _startDateTimePicker;
+
+  void _setPositionMarker(LatLng.LatLng positionMarker) {
+    _positionMarker = Marker(
+      width: 50.0,
+      height: 50.0,
+      point: positionMarker,
+      builder: (context) => Container(
+        child: SvgPicture.asset("assets/logo.svg",
+            semanticsLabel: 'Actevent', color: Color(0xFFdc3100)),
+      ),
+    );
+  }
 
   Widget _buildForm() {
     _startDateTimePicker = DateTimePicker(
@@ -156,38 +168,52 @@ class _EventsAddPageState extends State<EventsAddPage> {
         FutureBuilder<Position>(
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Container(child: FlutterMap(
-                  options: MapOptions(
-                    zoom: 17.5,
-                    center: LatLng.LatLng(
-                        snapshot.data.latitude, snapshot.data.longitude),
-                    onTap: (point) {
-                      _longitudeController.text = point.longitude.toString();
-                      _latitudeController.text = point.latitude.toString();
-                    },
-                  ),
-                  layers: [
-                    TileLayerOptions(
-                      urlTemplate:
-                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c'],
+              return Container(
+                child: FlutterMap(
+                    options: MapOptions(
+                      zoom: 17.5,
+                      center: LatLng.LatLng(
+                          snapshot.data.latitude, snapshot.data.longitude),
+                      onTap: (point) {
+                        _longitudeController.text = point.longitude.toString();
+                        _latitudeController.text = point.latitude.toString();
+                        setState(() {
+                          _setPositionMarker(
+                              LatLng.LatLng(point.latitude, point.longitude));
+                        });
+                      },
                     ),
-                    // MarkerLayerOptions(markers: [
-                    //   // Marker(
-                    //   //   width: 80.0,
-                    //   //   height: 80.0,
-                    //   //   point: eventPosition,
-                    //   //   builder: (ctx) => Container(
+                    layers: [
+                      TileLayerOptions(
+                        urlTemplate:
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a', 'b', 'c'],
+                      ),
+                      MarkerLayerOptions(
+                          markers: [_positionMarker].where(notNull).toList())
+                      // MarkerLayerOptions(markers: [
+                      //   // Marker(
+                      //   //   width: 80.0,
+                      //   //   height: 80.0,
+                      //   //   point: eventPosition,
+                      //   //   builder: (ctx) => Container(
 
-                    //   //   ),
-                    //   )
-                  ]),
-                  height: 300,);
-            }
-            if (snapshot.hasError) {
+                      //   //   ),
+                      //   )
+                    ]),
+                height: 300,
+              );
+            } else if (snapshot.hasError) {
               return Text("error");
+            } else {
+              return Center(
+                  child: Container(
+                padding: const EdgeInsets.all(10),
+                width: 50,
+                height: 50,
+                child: CircularProgressIndicator(),
+              ));
             }
-            return CircularProgressIndicator();
           },
           future: (() async => await widget.loactionService.getLocation())(),
         ),
