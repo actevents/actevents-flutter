@@ -79,7 +79,10 @@ class AmplifyAuth implements BaseAuth {
   }
 
   Future<AuthUser> currentUser() async {
-    await configureAmplify();
+    try {
+      configureAmplify();
+    } catch (e) {
+    }
     return await authPlugin.getCurrentUser();
   }
 

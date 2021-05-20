@@ -33,31 +33,16 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _signOut() async {
-    try {
-      await auth.signOut();
-      onSignOut();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     _pages = [
       EventsPage(location: widget.location, apiService: widget.apiService),
-      FindPage(location: widget.location),
-      ProfilePage(),
+      // FindPage(location: widget.location),
+      ProfilePage(auth: auth, onSingout: onSignOut),
     ];
 
     return new Scaffold(
       appBar: new AppBar(
-        actions: <Widget>[
-          new TextButton(
-              onPressed: _signOut,
-              child: new Text('Logout',
-                  style: new TextStyle(fontSize: 17.0, color: Colors.white)))
-        ],
       ),
       body: Center(child: _pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
@@ -65,9 +50,9 @@ class _HomePageState extends State<HomePage> {
         onTap: _changeIndex,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined), label: "Find"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.star_border), label: "Events"),
+                icon: Icon(Icons.search_outlined), label: "Find"),
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.star_border), label: "Events"),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_box_outlined), label: "Profile"),
         ],
