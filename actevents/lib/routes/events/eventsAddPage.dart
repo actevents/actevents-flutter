@@ -32,7 +32,7 @@ class _EventsAddPageState extends State<EventsAddPage> {
   DateTime _begin;
   DateTime _end;
 
-  final List<String> _pictureList = <String>[];
+  String _picturePath;
   final _formKey = GlobalKey<FormState>();
   bool notNull(Object o) => o != null;
 
@@ -214,20 +214,31 @@ class _EventsAddPageState extends State<EventsAddPage> {
   }
 
   void _submitForm() async {
+    // /events/upload -> GET
+    // uploadUrl und fileName (filename ist fuer Event Info)
+    // uploadUrl -> PUT -> binary
+
     print("submit form pressed");
     if (_formKey.currentState.validate()) {
-      print("Send data to api");
-
-      var actevent = Actevent(
-          name: _nameController.text,
-          description: _descriptionController.text,
-          latitude: _latitudeController.text,
-          longitude: _longitudeController.text,
-          endDate: _end,
-          beginDate: _begin,
-          tags: []);
-
       try {
+        var actevent = Actevent(
+            name: _nameController.text,
+            description: _descriptionController.text,
+            latitude: _latitudeController.text,
+            longitude: _longitudeController.text,
+            endDate: _end,
+            beginDate: _begin,
+            tags: []);
+
+        if (_picturePath != null) {
+          var split = _picturePath.split('.');
+          var fileType = split[split.length - 1];
+          var jsonResponse = await widget.apiService.getImageUrl(fileType);
+          await widget.apiService
+              .uploadImage(jsonResponse["uploadUrl"], _picturePath, fileType);
+          actevent.fileName = jsonResponse['fileName'];
+        }
+
         await widget.apiService.createNewEvent(actevent);
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -242,10 +253,10 @@ class _EventsAddPageState extends State<EventsAddPage> {
   }
 
   void _onPictureTaken(String path) {
-    log(path + " from callback");
     setState(() {
-      _pictureList.add(path);
+      _picturePath = path;
     });
+    log("Saved picture at " + path);
   }
 
   Future<String> _takePicture() async {
@@ -281,8 +292,8 @@ class _EventsAddPageState extends State<EventsAddPage> {
     widgets.add(OutlinedButton(
         onPressed: _takePicture,
         child: Container(width: 100, child: Icon(Icons.add_a_photo))));
-    for (var path in _pictureList) {
-      widgets.add(Image(image: FileImage(File(path), scale: 1)));
+    if (_picturePath != null) {
+      widgets.add(Image(image: FileImage(File(_picturePath), scale: 1)));
     }
     return widgets;
   }
