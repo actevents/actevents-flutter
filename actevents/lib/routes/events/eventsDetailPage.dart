@@ -12,11 +12,9 @@ import "package:latlong/latlong.dart" as LatLng;
 class EventsDetailPage extends StatefulWidget {
   final String eventId;
   final ApiService apiService;
-  final Position location;
   final LocationService locationService;
 
-  EventsDetailPage(
-      {this.eventId, this.apiService, this.location, this.locationService}) {}
+  EventsDetailPage({this.eventId, this.apiService, this.locationService}) {}
 
   @override
   _EventsDetailPageState createState() => _EventsDetailPageState();
@@ -31,10 +29,9 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   }
 
   Future<Actevent> loadEvent() async {
-    var res = await widget.apiService.getEventById(
-        widget.eventId,
-        widget.location.latitude.toString(),
-        widget.location.longitude.toString());
+    var location = await widget.locationService.getLocation();
+    var res = await widget.apiService.getEventById(widget.eventId,
+        location.latitude.toString(), location.longitude.toString());
     return res;
   }
 
@@ -130,7 +127,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              Text(snapshot.data.distance.toString())
+                              Text(snapshot.data.distance.round().toString() +
+                                  ' km')
                             ],
                           ),
                         ),

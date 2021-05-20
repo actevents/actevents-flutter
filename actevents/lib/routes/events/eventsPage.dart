@@ -12,10 +12,10 @@ import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
 class EventsPage extends StatefulWidget {
-  EventsPage({this.location, this.apiService});
+  EventsPage({this.locationService, this.apiService});
 
   final ApiService apiService;
-  final LocationService location;
+  final LocationService locationService;
   @override
   _EventsPage createState() => _EventsPage();
 }
@@ -53,15 +53,7 @@ class _EventsPage extends State<EventsPage> {
                     return EventsDetailPage(
                       eventId: actevent.id,
                       apiService: widget.apiService,
-                      location: Position(
-                          accuracy: 1,
-                          altitude: 0,
-                          floor: 0,
-                          heading: 0,
-                          isMocked: false,
-                          latitude: double.parse(actevent.latitude),
-                          longitude: double.parse(actevent.longitude)),
-                      locationService: widget.location,
+                      locationService: widget.locationService,
                     );
                   }));
                 },
@@ -81,7 +73,7 @@ class _EventsPage extends State<EventsPage> {
     return Container(
         height: MediaQuery.of(context).size.height * 0.3,
         child: FutureBuilder<Position>(
-          future: (() async => await widget.location.getLocation())(),
+          future: (() async => await widget.locationService.getLocation())(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return FlutterMap(
@@ -149,7 +141,7 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Future<List<Actevent>> _fetchData() async {
-    Position pos = await widget.location.getLocation();
+    Position pos = await widget.locationService.getLocation();
     String latitude = pos.latitude.toString();
     String longitude = pos.longitude.toString();
     print("Getting events for $latitude, $longitude and $_distance");
@@ -211,15 +203,7 @@ class _EventsPage extends State<EventsPage> {
             return EventsDetailPage(
               eventId: event.id,
               apiService: widget.apiService,
-              location: Position(
-                  accuracy: 1,
-                  altitude: 0,
-                  floor: 0,
-                  heading: 0,
-                  isMocked: false,
-                  latitude: double.parse(event.latitude),
-                  longitude: double.parse(event.longitude)),
-              locationService: widget.location,
+              locationService: widget.locationService,
             );
           }));
         },
