@@ -7,6 +7,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:geocoder/model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
 class EventsDetailPage extends StatefulWidget {
@@ -41,7 +42,7 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   Widget _showMapLocation(double latitude, double longitude) {
     var eventPosition = LatLng.LatLng(latitude, longitude);
     print(eventPosition);
-
+  
     return FlutterMap(
       options: MapOptions(
         zoom: 17.5,
@@ -58,9 +59,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             height: 80.0,
             point: eventPosition,
             builder: (ctx) => Container(
-              child: Icon(
-                Icons.location_on,
-                color: Colors.red[700],
+              child: SvgPicture.asset("assets/logo.svg",
+                            semanticsLabel: 'Actevent', color: Color(0xFFdc3100),
               ),
             ),
           )
@@ -130,8 +130,14 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              Text(snapshot.data.distance.toString())
-                            ],
+                              Container(
+                                width: MediaQuery.of(context).size.width -
+                                    elementDescriptionWidth -
+                                    15 -
+                                    13,
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Text(snapshot.data.distance.toString()),
+                              )],
                           ),
                         ),
                         Container(
@@ -145,7 +151,13 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              Text(snapshot.data.description)
+                              Container(
+                                width: MediaQuery.of(context).size.width -
+                                    elementDescriptionWidth -
+                                    15 -
+                                    13,
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Text(snapshot.data.description)),
                             ],
                           ),
                         ),
@@ -160,9 +172,15 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                   style: TextStyle(fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              Text(
+                              Container(
+                                width: MediaQuery.of(context).size.width -
+                                    elementDescriptionWidth -
+                                    15 -
+                                    13,
+                                padding: const EdgeInsets.only(left: 15),
+                                child:  Text(
                                   "${formatter.format(snapshot.data.beginDate)} \nbis \n${formatter.format(snapshot.data.endDate)}")
-                            ],
+                              )],
                           ),
                         ),
                         Container(

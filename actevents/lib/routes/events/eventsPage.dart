@@ -39,14 +39,14 @@ class _EventsPage extends State<EventsPage> {
     setState(() {
       acteventList.forEach((actevent) {
         _markers.add(Marker(
-            width: 150.0,
-            height: 150.0,
+            width: 50.0,
+            height: 50.0,
             point: LatLng.LatLng(double.parse(actevent.latitude),
                 double.parse(actevent.longitude)),
             builder: (ctx) {
               return GestureDetector(
                 child: SvgPicture.asset("assets/logo.svg",
-                            semanticsLabel: 'Actevent'),
+                            semanticsLabel: 'Actevent', color: Color(0xFFdc3100)),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (c) {
                     return EventsDetailPage(

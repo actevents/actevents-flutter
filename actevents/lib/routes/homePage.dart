@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'events/eventsPage.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({this.auth, this.onSignOut, this.location, this.apiService});
+  HomePage({this.auth, this.onSignOut, this.locationService, this.apiService});
   final BaseAuth auth;
   final VoidCallback onSignOut;
-  final LocationService location;
+  final LocationService locationService;
   final ApiService apiService;
   @override
   _HomePageState createState() =>
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _pages = [
-      EventsPage(location: widget.location, apiService: widget.apiService),
+      EventsPage(location: widget.locationService, apiService: widget.apiService),
       // FindPage(location: widget.location),
       ProfilePage(auth: auth, onSingout: onSignOut),
     ];
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-                  return EventsAddPage(apiService: widget.apiService);
+                  return EventsAddPage(apiService: widget.apiService, loactionService: widget.locationService);
                 }));
               },
               child: Text(

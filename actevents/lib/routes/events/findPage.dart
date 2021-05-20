@@ -42,8 +42,7 @@ class _FindPageState extends State<FindPage> {
                       width: 5.0,
                       height: 5.0,
                       builder: (ctx) => Container(
-                        child: SvgPicture.asset("assets\\logo.svg",
-                            semanticsLabel: 'Acme Logo',),
+                        child: FlutterLogo(),
                       ),
                     ),
                   ],

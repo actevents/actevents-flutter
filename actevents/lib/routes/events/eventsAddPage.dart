@@ -1,20 +1,27 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:actevents/helpers/dateTimePicker.dart';
 import 'package:actevents/helpers/picturePreviewScreen.dart';
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/services/apiService.dart';
+import 'package:actevents/services/locationService.dart';
 import 'package:camera/camera.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:flutter_map/plugin_api.dart';
+import 'package:geocoder/model.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_tagging/flutter_tagging.dart';
+import "package:latlong/latlong.dart" as LatLng;
 
 class EventsAddPage extends StatefulWidget {
   final ApiService apiService;
+  final LocationService loactionService;
 
-  EventsAddPage({this.apiService}) {}
+  EventsAddPage({this.apiService, this.loactionService}) {}
 
   @override
   _EventsAddPageState createState() => _EventsAddPageState();
@@ -145,6 +152,44 @@ class _EventsAddPageState extends State<EventsAddPage> {
         Text(
           "Ort",
           textAlign: TextAlign.center,
+        ),
+        FutureBuilder<Position>(
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(child: FlutterMap(
+                  options: MapOptions(
+                    zoom: 17.5,
+                    center: LatLng.LatLng(
+                        snapshot.data.latitude, snapshot.data.longitude),
+                    onTap: (point) {
+                      _longitudeController.text = point.longitude.toString();
+                      _latitudeController.text = point.latitude.toString();
+                    },
+                  ),
+                  layers: [
+                    TileLayerOptions(
+                      urlTemplate:
+                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      subdomains: ['a', 'b', 'c'],
+                    ),
+                    // MarkerLayerOptions(markers: [
+                    //   // Marker(
+                    //   //   width: 80.0,
+                    //   //   height: 80.0,
+                    //   //   point: eventPosition,
+                    //   //   builder: (ctx) => Container(
+
+                    //   //   ),
+                    //   )
+                  ]),
+                  height: 300,);
+            }
+            if (snapshot.hasError) {
+              return Text("error");
+            }
+            return CircularProgressIndicator();
+          },
+          future: (() async => await widget.loactionService.getLocation())(),
         ),
         // for now input fields for location lon and lat
         TextFormField(
