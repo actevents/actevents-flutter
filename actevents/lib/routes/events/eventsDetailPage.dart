@@ -116,8 +116,6 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.w600),
                         ),
-                        // TODO: put container in method
-                        // TODO: check for overflow in text
                         Container(
                           padding: const EdgeInsets.only(top: 20),
                           child: Row(
