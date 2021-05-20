@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
@@ -44,10 +45,8 @@ class _EventsPage extends State<EventsPage> {
                 double.parse(actevent.longitude)),
             builder: (ctx) {
               return GestureDetector(
-                child: Icon(
-                  Icons.location_on,
-                  color: Colors.red[700],
-                ),
+                child: SvgPicture.asset("assets/logo.svg",
+                            semanticsLabel: 'Actevent'),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (c) {
                     return EventsDetailPage(

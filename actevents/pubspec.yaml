@@ -20,10 +20,14 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
+
+
 dependencies:
   flutter:
     sdk: flutter
 
+  
+  flutter_svg: ^0.22.0
   amplify_flutter: '<1.0.0'
   amplify_auth_cognito: '<1.0.0'
   #location: ^3.0.0
@@ -54,7 +58,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+    - assets/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

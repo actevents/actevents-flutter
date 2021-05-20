@@ -1,6 +1,7 @@
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 
@@ -27,7 +28,8 @@ class _FindPageState extends State<FindPage> {
             return FlutterMap(
               options: MapOptions(
                 zoom: 13.0,
-                center: LatLng.LatLng(snapshot.data.latitude, snapshot.data.longitude),
+                center: LatLng.LatLng(
+                    snapshot.data.latitude, snapshot.data.longitude),
               ),
               layers: [
                 TileLayerOptions(
@@ -37,10 +39,11 @@ class _FindPageState extends State<FindPage> {
                 MarkerLayerOptions(
                   markers: [
                     Marker(
-                      width: 80.0,
-                      height: 80.0,
+                      width: 5.0,
+                      height: 5.0,
                       builder: (ctx) => Container(
-                        child: FlutterLogo(),
+                        child: SvgPicture.asset("assets\\logo.svg",
+                            semanticsLabel: 'Acme Logo',),
                       ),
                     ),
                   ],
