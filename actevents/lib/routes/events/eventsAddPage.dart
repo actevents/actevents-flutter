@@ -191,15 +191,6 @@ class _EventsAddPageState extends State<EventsAddPage> {
                       ),
                       MarkerLayerOptions(
                           markers: [_positionMarker].where(notNull).toList())
-                      // MarkerLayerOptions(markers: [
-                      //   // Marker(
-                      //   //   width: 80.0,
-                      //   //   height: 80.0,
-                      //   //   point: eventPosition,
-                      //   //   builder: (ctx) => Container(
-
-                      //   //   ),
-                      //   )
                     ]),
                 height: 300,
               );
@@ -217,7 +208,6 @@ class _EventsAddPageState extends State<EventsAddPage> {
           },
           future: (() async => await widget.loactionService.getLocation())(),
         ),
-        // for now input fields for location lon and lat
         TextFormField(
           key: Key("addEventFormLatitude"),
           controller: _latitudeController,
