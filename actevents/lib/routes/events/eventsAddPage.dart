@@ -263,18 +263,18 @@ class _EventsAddPageState extends State<EventsAddPage> {
 
         // ----------------------------------
         // ------------ Tags ----------------
-        _drawDivider(),
-        Text("Tags", textAlign: TextAlign.center),
-        Container(
-          // height: MediaQuery.of(context).size.height * 0.2,
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-          // child: FlutterTagging(
-          //     initialItems: _selectedTags,
-          //     findSuggestions: findSuggestions,
-          //     configureChip: configureChip,
-          //     configureSuggestion: configureSuggestion)
-          child: Text("Tags - WIP"),
-        ),
+        // _drawDivider(),
+        // Text("Tags", textAlign: TextAlign.center),
+        // Container(
+        //   // height: MediaQuery.of(context).size.height * 0.2,
+        //   padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        //   // child: FlutterTagging(
+        //   //     initialItems: _selectedTags,
+        //   //     findSuggestions: findSuggestions,
+        //   //     configureChip: configureChip,
+        //   //     configureSuggestion: configureSuggestion)
+        //   child: Text("Tags - WIP"),
+        // ),
         // ----------------------------------
         // ------------ Submit --------------
         _drawDivider(),
