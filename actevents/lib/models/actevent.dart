@@ -64,7 +64,7 @@ class Actevent {
     json['tags'] = this.tags ?? [];
     json['price'] = this.price ?? (0.0).toString();
 
-    json['fileName'] = this.fileName;
+    if (this.fileName != null) json['fileName'] = this.fileName;
 
     return json;
   }

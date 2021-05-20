@@ -259,10 +259,6 @@ class _EventsAddPageState extends State<EventsAddPage> {
   }
 
   void _submitForm() async {
-    // /events/upload -> GET
-    // uploadUrl und fileName (filename ist fuer Event Info)
-    // uploadUrl -> PUT -> binary
-
     print("submit form pressed");
     if (_formKey.currentState.validate()) {
       try {

@@ -36,21 +36,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _pages = [
-      EventsPage(location: widget.locationService, apiService: widget.apiService),
+      EventsPage(locationService: widget.locationService, apiService: widget.apiService),
       // FindPage(location: widget.location),
       ProfilePage(auth: auth, onSingout: onSignOut),
     ];
 
     return new Scaffold(
-      appBar: new AppBar(
-      ),
+      appBar: new AppBar(),
       body: Center(child: _pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTabIndex,
         onTap: _changeIndex,
         items: [
           BottomNavigationBarItem(
-                icon: Icon(Icons.search_outlined), label: "Find"),
+              icon: Icon(Icons.search_outlined), label: "Find"),
           // BottomNavigationBarItem(
           //     icon: Icon(Icons.star_border), label: "Events"),
           BottomNavigationBarItem(

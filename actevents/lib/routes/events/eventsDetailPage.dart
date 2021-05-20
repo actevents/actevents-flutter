@@ -13,11 +13,9 @@ import "package:latlong/latlong.dart" as LatLng;
 class EventsDetailPage extends StatefulWidget {
   final String eventId;
   final ApiService apiService;
-  final Position location;
   final LocationService locationService;
 
-  EventsDetailPage(
-      {this.eventId, this.apiService, this.location, this.locationService}) {}
+  EventsDetailPage({this.eventId, this.apiService, this.locationService}) {}
 
   @override
   _EventsDetailPageState createState() => _EventsDetailPageState();
@@ -32,17 +30,16 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   }
 
   Future<Actevent> loadEvent() async {
-    var res = await widget.apiService.getEventById(
-        widget.eventId,
-        widget.location.latitude.toString(),
-        widget.location.longitude.toString());
+    var location = await widget.locationService.getLocation();
+    var res = await widget.apiService.getEventById(widget.eventId,
+        location.latitude.toString(), location.longitude.toString());
     return res;
   }
 
   Widget _showMapLocation(double latitude, double longitude) {
     var eventPosition = LatLng.LatLng(latitude, longitude);
     print(eventPosition);
-  
+
     return FlutterMap(
       options: MapOptions(
         zoom: 17.5,
@@ -59,8 +56,10 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
             height: 80.0,
             point: eventPosition,
             builder: (ctx) => Container(
-              child: SvgPicture.asset("assets/logo.svg",
-                            semanticsLabel: 'Actevent', color: Color(0xFFdc3100),
+              child: SvgPicture.asset(
+                "assets/logo.svg",
+                semanticsLabel: 'Actevent',
+                color: Color(0xFFdc3100),
               ),
             ),
           )
@@ -136,8 +135,11 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                     15 -
                                     13,
                                 padding: const EdgeInsets.only(left: 15),
-                                child: Text(snapshot.data.distance.toString()),
-                              )],
+                                child: Text(
+                                    snapshot.data.distance.round().toString() +
+                                        ' km'),
+                              )
+                            ],
                           ),
                         ),
                         Container(
@@ -152,12 +154,12 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width -
-                                    elementDescriptionWidth -
-                                    15 -
-                                    13,
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Text(snapshot.data.description)),
+                                  width: MediaQuery.of(context).size.width -
+                                      elementDescriptionWidth -
+                                      15 -
+                                      13,
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(snapshot.data.description)),
                             ],
                           ),
                         ),
@@ -173,14 +175,14 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
                                 ),
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width -
-                                    elementDescriptionWidth -
-                                    15 -
-                                    13,
-                                padding: const EdgeInsets.only(left: 15),
-                                child:  Text(
-                                  "${formatter.format(snapshot.data.beginDate)} \nbis \n${formatter.format(snapshot.data.endDate)}")
-                              )],
+                                  width: MediaQuery.of(context).size.width -
+                                      elementDescriptionWidth -
+                                      15 -
+                                      13,
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(
+                                      "${formatter.format(snapshot.data.beginDate)} \nbis \n${formatter.format(snapshot.data.endDate)}"))
+                            ],
                           ),
                         ),
                         Container(
