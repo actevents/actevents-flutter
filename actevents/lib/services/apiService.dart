@@ -1,4 +1,7 @@
+import 'dart:developer' as dev;
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:actevents/models/actevent.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,7 +30,8 @@ class ApiService {
       'latitude': latitude,
       'radius': radius.toString()
     };
-    var uri = Uri.https(this._baseUrl, _envPath + '/events', queryParameters);
+    var uri =
+        Uri.https(this._baseUrl, this._envPath + '/events', queryParameters);
 
     http.Response response = await http.get(uri, headers: this._headers);
 
@@ -47,8 +51,24 @@ class ApiService {
     }
   }
 
+  Future<void> uploadImage(
+      String uploadUrl, String filePath, String fileType) async {
+    dev.log("Trying to upload image at " + filePath + "to " + uploadUrl);
+    var bytes = File(filePath).readAsBytesSync();
+
+    var response = await http.put(uploadUrl, body: bytes, headers: {
+      "Content-Type": fileType == "jpg" ? "image/jpeg" : "image/png"
+    });
+    if (response.statusCode == 200) {
+      dev.log("Image uploaded successfully to s3");
+    } else {
+      throw ErrorDescription(
+          "Non 200 status code received when uploading image to s3");
+    }
+  }
+
   Future<void> createNewEvent(Actevent actevent) async {
-    var uri = Uri.https(this._baseUrl, _envPath + '/events');
+    var uri = Uri.https(this._baseUrl, this._envPath + '/events');
     var body = json.encode(actevent.acteventToJSON());
     http.Response response =
         await http.post(uri, headers: this._headers, body: body);
@@ -68,8 +88,8 @@ class ApiService {
       "longitude": longitude
     };
 
-    var uri =
-        Uri.https(this._baseUrl, _envPath + '/events/' + id, queryParameters);
+    var uri = Uri.https(
+        this._baseUrl, this._envPath + '/events/' + id, queryParameters);
     http.Response response = await http.get(uri, headers: this._headers);
     if (response.statusCode == 200) {
       dynamic body = jsonDecode(response.body);
@@ -82,6 +102,20 @@ class ApiService {
           "\nBody: " +
           response.body);
       throw ErrorDescription("Non 200 status code received from api");
+    }
+  }
+
+  Future<Map<String, dynamic>> getImageUrl(String fileType) async {
+    Map<String, dynamic> queryParameters = {"extension": fileType};
+
+    var uri = Uri.https(
+        this._baseUrl, this._envPath + '/events/upload', queryParameters);
+    var response = await http.get(uri, headers: this._headers);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw ErrorDescription(
+          "Non 200 status code received for retrival of image url.");
     }
   }
 

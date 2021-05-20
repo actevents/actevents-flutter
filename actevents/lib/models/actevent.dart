@@ -12,6 +12,7 @@ class Actevent {
   List<dynamic> tags;
   double price = 0.0;
   String imageUrl;
+  String fileName;
 
   Actevent(
       {this.id,
@@ -24,7 +25,8 @@ class Actevent {
       this.endDate,
       this.tags,
       this.price,
-      this.imageUrl});
+      this.imageUrl,
+      this.fileName});
 
   factory Actevent.fromJSON(Map<String, dynamic> json) {
     return Actevent(
@@ -60,7 +62,9 @@ class Actevent {
     json['dates'] = jsonDates;
 
     json['tags'] = this.tags ?? [];
-    json['price'] = this.price ?? 0.0;
+    json['price'] = this.price ?? (0.0).toString();
+
+    json['fileName'] = this.fileName;
 
     return json;
   }
