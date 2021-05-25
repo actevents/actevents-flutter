@@ -82,14 +82,22 @@ class ApiService {
   }
 
   Future<Actevent> getEventById(
-      String id, String latitude, String longitude) async {
-    Map<String, dynamic> queryParameters = {
-      "latitude": latitude,
-      "longitude": longitude
-    };
+      {@required id: String, latitude: String, longitude: String}) async {
+    Map<String, dynamic> queryParameters = {};
+    Uri uri;
+    if (latitude != null &&
+        latitude != '' &&
+        longitude != null &&
+        longitude != '') {
+      queryParameters['latitude'] = latitude;
+      queryParameters['longitude'] = longitude;
 
-    var uri = Uri.https(
-        this._baseUrl, this._envPath + '/events/' + id, queryParameters);
+      uri = Uri.https(
+          this._baseUrl, this._envPath + '/events/' + id, queryParameters);
+    } else {
+      uri = Uri.https(this._baseUrl, this._envPath + '/events/' + id);
+    }
+
     http.Response response = await http.get(uri, headers: this._headers);
     if (response.statusCode == 200) {
       dynamic body = jsonDecode(response.body);
@@ -119,7 +127,39 @@ class ApiService {
     }
   }
 
-  // Actevent({this.id, this.name, this.longitude, this.latitude, this.distance});
+  Future<List<String>> getUserFavourites() async {
+    var uri = Uri.https(this._baseUrl, this._envPath + '/favorites');
+    var response = await http.get(uri, headers: this._headers);
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      return ((body['favorites'] as List)
+              ?.map((element) => element as String)
+              ?.toList()) ??
+          <String>[];
+    } else {
+      throw ErrorDescription("Non 200 status code received from api");
+    }
+  }
+
+  Future<void> addUserFavourite(Actevent actevent) async {
+    Map<String, dynamic> bodyParameter = {"favorite": actevent.id};
+    var uri = Uri.https(this._baseUrl, this._envPath + '/favorites');
+    var response = await http.post(uri,
+        body: jsonEncode(bodyParameter), headers: this._headers);
+    if (response.statusCode != 200) {
+      throw ErrorDescription("Non 200 status code received from api");
+    }
+  }
+
+  Future<void> deleteUserFavourite(Actevent actevent) async {
+    Map<String, dynamic> queryParameters = {"favorite": actevent.id};
+    var uri =
+        Uri.https(this._baseUrl, this._envPath + '/favorites', queryParameters);
+    var response = await http.delete(uri);
+    if (response.statusCode != 200) {
+      throw ErrorDescription("Non 200 status code received from api");
+    }
+  }
 
   Future<List<Actevent>> getLocalTestList() async {
     List<Actevent> list = [];

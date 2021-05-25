@@ -1,5 +1,5 @@
 import 'package:actevents/routes/events/eventsAddPage.dart';
-import 'package:actevents/routes/events/findPage.dart';
+import 'package:actevents/routes/events/favouritePage.dart';
 import 'package:actevents/routes/user/profilePage.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/auth.dart';
@@ -36,8 +36,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _pages = [
-      EventsPage(locationService: widget.locationService, apiService: widget.apiService),
-      // FindPage(location: widget.location),
+      EventsPage(
+          locationService: widget.locationService,
+          apiService: widget.apiService),
+      FavouritePage(
+        apiService: widget.apiService,
+        locationService: widget.locationService,
+      ),
       ProfilePage(auth: auth, onSingout: onSignOut),
     ];
 
@@ -49,18 +54,20 @@ class _HomePageState extends State<HomePage> {
         onTap: _changeIndex,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.search_outlined), label: "Find"),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.star_border), label: "Events"),
+              icon: Icon(Icons.search_outlined), label: "Finden"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_box_outlined), label: "Profile"),
+              icon: Icon(Icons.star_border_outlined), label: "Favoriten"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_box_outlined), label: "Profil"),
         ],
       ),
       floatingActionButton: _selectedTabIndex == 0
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (c) {
-                  return EventsAddPage(apiService: widget.apiService, loactionService: widget.locationService);
+                  return EventsAddPage(
+                      apiService: widget.apiService,
+                      loactionService: widget.locationService);
                 }));
               },
               child: Text(

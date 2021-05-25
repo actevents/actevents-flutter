@@ -1,7 +1,6 @@
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import "package:latlong/latlong.dart" as LatLng;
 

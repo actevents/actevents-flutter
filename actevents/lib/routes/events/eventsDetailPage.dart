@@ -31,8 +31,10 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
 
   Future<Actevent> loadEvent() async {
     var location = await widget.locationService.getLocation();
-    var res = await widget.apiService.getEventById(widget.eventId,
-        location.latitude.toString(), location.longitude.toString());
+    var res = await widget.apiService.getEventById(
+        id: widget.eventId,
+        latitude: location.latitude.toString(),
+        longitude: location.longitude.toString());
     return res;
   }
 

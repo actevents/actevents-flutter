@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -46,7 +43,7 @@ class _EventsPage extends State<EventsPage> {
             builder: (ctx) {
               return GestureDetector(
                 child: SvgPicture.asset("assets/logo.svg",
-                            semanticsLabel: 'Actevent', color: Color(0xFFdc3100)),
+                    semanticsLabel: 'Actevent', color: Color(0xFFdc3100)),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (c) {
                     return EventsDetailPage(
@@ -160,7 +157,7 @@ class _EventsPage extends State<EventsPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _filterOptionsPanel(),
+        _buildFilterOptionsPanel(),
         _mapElement(),
         Expanded(child: _eventList())
       ],
@@ -176,7 +173,7 @@ class _EventsPage extends State<EventsPage> {
     List<Widget> children = [];
 
     for (var event in list) {
-      Widget item = _listItem(event);
+      Widget item = _buildListItem(event);
       children.add(item);
     }
 
@@ -188,11 +185,13 @@ class _EventsPage extends State<EventsPage> {
         onRefresh: _handleRefresh);
   }
 
-  Widget _listItem(Actevent event) {
-    // TODO: get address here from locationService.convert...
+  Widget _buildListItem(Actevent event) {
     return Card(
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
+        trailing: IconButton(
+            icon: Icon(Icons.star_outline_outlined),
+            onPressed: () => widget.apiService.addUserFavourite(event)),
         title: Text(event.name),
         subtitle: Text("Abstand zur derzeitigen Position " +
             event.distance.round().toString() +
@@ -210,7 +209,7 @@ class _EventsPage extends State<EventsPage> {
     );
   }
 
-  Widget _filterOptionsPanel() {
+  Widget _buildFilterOptionsPanel() {
     const double containerPadding = 10;
 
     return ExpansionPanelList(
