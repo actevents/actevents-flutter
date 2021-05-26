@@ -104,7 +104,9 @@ class _FavouritePageState extends State<FavouritePage> {
                             try {
                               widget.apiService.deleteUserFavourite(event);
                             } catch (e) {
-                              // TODO: notify user
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: const Text(
+                                      "Das Event konnte aufgrund eines Fehlers nicht aus deinen Favoriten gelöscht werden. Versuche es später erneut.")));
                               print(e);
                             }
                             Navigator.pop(context, "OK");
