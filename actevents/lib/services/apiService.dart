@@ -155,7 +155,7 @@ class ApiService {
     Map<String, dynamic> queryParameters = {"favorite": actevent.id};
     var uri =
         Uri.https(this._baseUrl, this._envPath + '/favorites', queryParameters);
-    var response = await http.delete(uri);
+    var response = await http.delete(uri, headers: this._headers);
     if (response.statusCode != 200) {
       throw ErrorDescription("Non 200 status code received from api");
     }

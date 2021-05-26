@@ -81,7 +81,34 @@ class _FavouritePageState extends State<FavouritePage> {
   Widget _buildItemCard(Actevent event) {
     return Card(
       child: ListTile(
-        leading: Icon(Icons.pin_drop_outlined),
+        leading: IconButton(
+            icon: Icon(Icons.star),
+            onPressed: () => showDialog<String>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Favorisiertes Event entfernen?"),
+                    content: const Text(
+                        "Bitte klicke auf Entfernen, wenn Du das Event aus deinen Favoriten löschen möchtest." +
+                            "\nWenn Du das Event in deinen Favoriten beibehalten möchtest, wähle Abbrechen."),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: Text("Abbrechen")),
+                      TextButton(
+                          onPressed: () {
+                            try {
+                              widget.apiService.deleteUserFavourite(event);
+                            } catch (e) {
+                              // TODO: notify user
+                              print(e);
+                            }
+                            Navigator.pop(context, "OK");
+                            this._handleRefresh();
+                          },
+                          child: Text("Entfernen"))
+                    ],
+                  ),
+                )),
         title: Text(event.name),
         subtitle: Text("Weitere Info"),
         onTap: () {
