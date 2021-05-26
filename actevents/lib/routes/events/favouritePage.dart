@@ -25,7 +25,7 @@ class _FavouritePageState extends State<FavouritePage> {
     super.initState();
   }
 
-  void _fetchData() async {
+  Future<void> _fetchData() async {
     var favouriteIds = await widget.apiService.getUserFavourites();
     var location = await widget.locationService.getLocation();
 
@@ -44,7 +44,7 @@ class _FavouritePageState extends State<FavouritePage> {
     });
   }
 
-  void _handleRefresh() async {
+  Future<void> _handleRefresh() async {
     print("Refresh triggered");
   }
 
