@@ -13,6 +13,7 @@ class Actevent {
   double price = 0.0;
   String imageUrl;
   String fileName;
+  bool favourite = false;
 
   Actevent(
       {this.id,
@@ -26,7 +27,8 @@ class Actevent {
       this.tags,
       this.price,
       this.imageUrl,
-      this.fileName});
+      this.fileName,
+      this.favourite});
 
   factory Actevent.fromJSON(Map<String, dynamic> json) {
     return Actevent(
@@ -43,7 +45,8 @@ class Actevent {
         endDate:
             DateTime.parse((json["dates"] as Map<String, dynamic>)["begin"]),
         tags: json["tags"] as List<dynamic>,
-        imageUrl: json["s3BucketUrl"]);
+        imageUrl: json["s3BucketUrl"],
+        favourite: false);
   }
 
   Map<String, dynamic> acteventToJSON() {

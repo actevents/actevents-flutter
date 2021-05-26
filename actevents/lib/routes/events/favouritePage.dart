@@ -17,9 +17,11 @@ class FavouritePage extends StatefulWidget {
 class _FavouritePageState extends State<FavouritePage> {
   Future<List<String>> _favouriteIds;
   List<Actevent> _favouriteActevents;
+  bool _loading = true;
 
   @override
   void initState() {
+    _loading = true;
     _favouriteActevents = [];
     _fetchData();
     super.initState();
@@ -40,6 +42,7 @@ class _FavouritePageState extends State<FavouritePage> {
     var allEvents = await Future.wait(futures);
 
     setState(() {
+      _loading = false;
       _favouriteActevents = allEvents;
     });
   }
@@ -51,7 +54,9 @@ class _FavouritePageState extends State<FavouritePage> {
   Widget _buildList() {
     List<Widget> listItems = _buildListItems();
 
-    if (listItems.length == 0) {
+    if (_loading) {
+      return CircularProgressIndicator();
+    } else if (listItems.length == 0) {
       return Container(
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
           child: Text(

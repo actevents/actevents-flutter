@@ -21,14 +21,17 @@ class EventsPage extends StatefulWidget {
 class _EventsPage extends State<EventsPage> {
   double _distance = 50;
   Future<List<Actevent>> _events;
+  Future<List<String>> _favourites;
   List<Marker> _markers;
   bool _filterOptionsExpanded = false;
 
   @override
   void initState() {
     _markers = [];
-    _events = _fetchData();
+    _events = _fetchActevents();
     _events.then((value) => _mapMarkers(value));
+    _favourites = _fetchFavourites();
+    _favourites.then((value) => _mapFavourites(value));
   }
 
   void _mapMarkers(List<Actevent> acteventList) {
@@ -57,6 +60,16 @@ class _EventsPage extends State<EventsPage> {
             }));
       });
     });
+  }
+
+  void _mapFavourites(List<String> favouriteIds) {
+    _events.then((events) => favouriteIds.forEach((element) {
+          setState(() {
+            events
+                .firstWhere((eventElement) => eventElement.id == element)
+                .favourite = true;
+          });
+        }));
   }
 
   void _sliderChanged(double sliderValue) {
@@ -136,7 +149,7 @@ class _EventsPage extends State<EventsPage> {
     );
   }
 
-  Future<List<Actevent>> _fetchData() async {
+  Future<List<Actevent>> _fetchActevents() async {
     Position pos = await widget.locationService.getLocation();
     String latitude = pos.latitude.toString();
     String longitude = pos.longitude.toString();
@@ -146,9 +159,13 @@ class _EventsPage extends State<EventsPage> {
     // return await apiService.getLocalTestList();
   }
 
+  Future<List<String>> _fetchFavourites() {
+    return widget.apiService.getUserFavourites();
+  }
+
   Future<void> _handleRefresh() async {
     setState(() {
-      _events = _fetchData();
+      _events = _fetchActevents();
     });
     _events.then((list) => _mapMarkers(list));
   }
@@ -185,13 +202,45 @@ class _EventsPage extends State<EventsPage> {
         onRefresh: _handleRefresh);
   }
 
+  Future<void> _addFavourite(Actevent event) async {
+    try {
+      await widget.apiService.addUserFavourite(event);
+      setState(() {
+        event.favourite = true;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+              "Das Event konnte aufgrund eines Fehlers nicht zu deinen Favoriten hinzugefügt werden. Versuche es später erneut.")));
+      print(e);
+    }
+  }
+
+  Future<void> _deleteFavourite(Actevent event) async {
+    try {
+      await widget.apiService.deleteUserFavourite(event);
+      setState(() {
+        event.favourite = false;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+              "Das Event konnte aufgrund eines Fehlers nicht aus deinen Favoriten gelöscht werden. Versuche es später erneut.")));
+      print(e);
+    }
+  }
+
   Widget _buildListItem(Actevent event) {
     return Card(
       child: ListTile(
         leading: Icon(Icons.pin_drop_outlined),
-        trailing: IconButton(
-            icon: Icon(Icons.star_outline_outlined),
-            onPressed: () => widget.apiService.addUserFavourite(event)),
+        trailing: event.favourite
+            ? IconButton(
+                icon: Icon(Icons.star),
+                onPressed: () => _deleteFavourite(event))
+            : IconButton(
+                icon: Icon(Icons.star_outline_outlined),
+                onPressed: () => _addFavourite(event)),
         title: Text(event.name),
         subtitle: Text("Abstand zur derzeitigen Position " +
             event.distance.round().toString() +
