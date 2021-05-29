@@ -159,8 +159,9 @@ class _EventsPage extends State<EventsPage> {
     // return await apiService.getLocalTestList();
   }
 
-  Future<List<String>> _fetchFavourites() {
-    return widget.apiService.getUserFavourites();
+  Future<List<String>> _fetchFavourites() async {
+    var favourites = await widget.apiService.getUserFavourites();
+    return favourites.map((e) => e.id).toList();
   }
 
   Future<void> _handleRefresh() async {
@@ -168,6 +169,8 @@ class _EventsPage extends State<EventsPage> {
       _events = _fetchActevents();
     });
     _events.then((list) => _mapMarkers(list));
+    _favourites = _fetchFavourites();
+    _favourites.then((value) => _mapFavourites(value));
   }
 
   @override

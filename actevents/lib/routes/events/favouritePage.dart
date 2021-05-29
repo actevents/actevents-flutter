@@ -3,12 +3,17 @@ import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/model.dart';
+import 'package:geolocator/geolocator.dart';
 
 class FavouritePage extends StatefulWidget {
   final ApiService apiService;
   final LocationService locationService;
 
-  FavouritePage({@required this.apiService, @required this.locationService});
+  FavouritePage({
+    @required this.apiService,
+    @required this.locationService,
+  });
 
   @override
   _FavouritePageState createState() => _FavouritePageState();
@@ -18,32 +23,23 @@ class _FavouritePageState extends State<FavouritePage> {
   Future<List<String>> _favouriteIds;
   List<Actevent> _favouriteActevents;
   bool _loading = true;
+  Future<Position> _location;
 
   @override
   void initState() {
     _loading = true;
     _favouriteActevents = [];
     _fetchData();
+    _location = widget.locationService.getLocation();
     super.initState();
   }
 
   Future<void> _fetchData() async {
-    var favouriteIds = await widget.apiService.getUserFavourites();
-    var location = await widget.locationService.getLocation();
-
-    List<Future<Actevent>> futures = [];
-    for (String id in favouriteIds) {
-      futures.add(widget.apiService.getEventById(
-          id: id,
-          latitude: location.latitude.toString(),
-          longitude: location.longitude.toString()));
-    }
-
-    var allEvents = await Future.wait(futures);
+    var favourites = await widget.apiService.getUserFavourites();
 
     setState(() {
       _loading = false;
-      _favouriteActevents = allEvents;
+      _favouriteActevents = favourites;
     });
   }
 
@@ -117,7 +113,7 @@ class _FavouritePageState extends State<FavouritePage> {
                   ),
                 )),
         title: Text(event.name),
-        subtitle: Text("Weitere Info"),
+        subtitle: _buildSubtitle(event),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (c) {
             return EventsDetailPage(
@@ -128,6 +124,26 @@ class _FavouritePageState extends State<FavouritePage> {
           }));
         },
       ),
+    );
+  }
+
+  Future<Address> _getAddressOfEvent(Actevent event) async {
+    return widget.locationService.convertCoordinatesToAddress(Coordinates(
+        double.parse(event.latitude), double.parse(event.longitude)));
+  }
+
+  Widget _buildSubtitle(Actevent event) {
+    return FutureBuilder(
+      future: _getAddressOfEvent(event),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          Address address = snapshot.data;
+          return Text(address.addressLine);
+        } else {
+          return Text(
+              "Es ist ein Fehler beim Abrufen der Adresse aufgetreten.");
+        }
+      },
     );
   }
 

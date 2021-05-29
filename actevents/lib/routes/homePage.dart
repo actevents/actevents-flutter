@@ -33,6 +33,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Widget _getTitleFromIndex(int index) {
+    if (index == 0)
+      return Text("Finden");
+    else if (index == 1)
+      return Text("Favoriten");
+    else if (index == 2)
+      return Text("Profil");
+    else
+      return Text("");
+  }
+
   @override
   Widget build(BuildContext context) {
     _pages = [
@@ -47,7 +58,7 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return new Scaffold(
-      appBar: new AppBar(),
+      appBar: new AppBar(title: _getTitleFromIndex(_selectedTabIndex)),
       body: Center(child: _pages[_selectedTabIndex]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedTabIndex,

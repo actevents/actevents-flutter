@@ -127,15 +127,15 @@ class ApiService {
     }
   }
 
-  Future<List<String>> getUserFavourites() async {
+  Future<List<Actevent>> getUserFavourites() async {
     var uri = Uri.https(this._baseUrl, this._envPath + '/favorites');
     var response = await http.get(uri, headers: this._headers);
     if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      return ((body['favorites'] as List)
-              ?.map((element) => element as String)
-              ?.toList()) ??
-          <String>[];
+      List<dynamic> jsonBody = jsonDecode(response.body) as List;
+      List<Actevent> fetchedEvents =
+          (jsonBody?.map((e) => Actevent.fromJSON(e))?.toList()) ??
+              <Actevent>[];
+      return fetchedEvents;
     } else {
       throw ErrorDescription("Non 200 status code received from api");
     }
