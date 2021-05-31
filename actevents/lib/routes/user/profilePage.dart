@@ -25,24 +25,27 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 child: Text(
-                  "Benutzerdaten:",
-                  textScaleFactor: 2,
+                  "Benutzerdaten",
+                  textScaleFactor: 1.5,
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 margin: EdgeInsets.all(10),
               ),
               Container(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                        child: Text("Benutzername:"),
-                        margin: EdgeInsets.all(10)),
-                    Container(child: Text(snapshot.data.username)),
+                    Text("Angemeldet mit dem Konto "),
+                    Text(
+                      snapshot.data.username,
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    )
                   ],
                 ),
                 margin: EdgeInsets.all(10),
               ),
               Container(
-                  child: new TextButton(
+                  child: new OutlinedButton(
                 onPressed: _signOut,
                 child: new Text('Logout', style: new TextStyle(fontSize: 17.0)),
                 style: ButtonStyle(
