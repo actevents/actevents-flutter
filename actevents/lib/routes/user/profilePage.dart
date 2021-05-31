@@ -76,8 +76,47 @@ class _ProfilePageState extends State<ProfilePage> {
                                     leading: Icon(Icons.pin_drop_outlined),
                                     trailing: IconButton(
                                         icon: Icon(Icons.delete),
-                                        onPressed: () =>
-                                            _deleteOwnEvent(event)),
+                                        onPressed: () => showDialog<String>(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text(
+                                                    "Event entfernen?"),
+                                                content: const Text(
+                                                    "Bitte klicke auf Entfernen, wenn Du das Event löschen möchtest." +
+                                                        "\nWenn Du das Event behalten möchtest, wähle Abbrechen."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'Cancel'),
+                                                      child: Text("Abbrechen")),
+                                                  TextButton(
+                                                      onPressed: () async {
+                                                        try {
+                                                          await widget.apiService.deleteOwnEvent(event);
+                                                          setState(() {
+                                                            refresh = !refresh;
+                                                          });
+                                                        } catch (e) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content:
+                                                                      const Text(
+                                                                          "Das Event konnte aufgrund eines Fehlers micht gelöscht werden. Versuche es später erneut.")));
+                                                          print(e);
+                                                        }
+                                                        Navigator.pop(
+                                                            context, "OK");
+                                                      },
+                                                      child: Text("Entfernen"))
+                                                ],
+                                              ),
+                                            )),
+                                    // IconButton(
+                                    //     icon: Icon(Icons.delete),
+                                    //     onPressed: () =>
+                                    //         _deleteOwnEvent(event)),
                                     title: Text(event.name))));
                           }
                           return Column(children: widgets);
@@ -98,20 +137,6 @@ class _ProfilePageState extends State<ProfilePage> {
       },
       future: (() async => widget.auth.currentUser())(),
     );
-  }
-
-  Future<void> _deleteOwnEvent(Actevent event) async {
-    try {
-      await widget.apiService.deleteOwnEvent(event);
-      setState(() {
-        refresh = !refresh;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text(
-              "Das Event konnte aufgrund eines Fehlers micht gelöscht werden. Versuche es später erneut.")));
-      print(e);
-    }
   }
 
   void _signOut() async {
