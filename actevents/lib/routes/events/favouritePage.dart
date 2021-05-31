@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:actevents/services/apiService.dart';
@@ -35,12 +37,19 @@ class _FavouritePageState extends State<FavouritePage> {
   }
 
   Future<void> _fetchData() async {
-    var favourites = await widget.apiService.getUserFavourites();
+    try {
+      var favourites = await widget.apiService.getUserFavourites();
 
-    setState(() {
-      _loading = false;
-      _favouriteActevents = favourites;
-    });
+      setState(() {
+        _loading = false;
+        _favouriteActevents = favourites;
+      });
+    } catch (e) {
+      log("Error loading favourites " + e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+              "Favoriten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.")));
+    }
   }
 
   Future<void> _handleRefresh() async {

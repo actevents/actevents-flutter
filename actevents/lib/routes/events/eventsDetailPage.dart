@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/services/apiService.dart';
 import 'package:actevents/services/locationService.dart';
@@ -30,12 +32,20 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
   }
 
   Future<Actevent> loadEvent() async {
-    var location = await widget.locationService.getLocation();
-    var res = await widget.apiService.getEventById(
-        id: widget.eventId,
-        latitude: location.latitude.toString(),
-        longitude: location.longitude.toString());
-    return res;
+    try {
+      var location = await widget.locationService.getLocation();
+      var res = await widget.apiService.getEventById(
+          id: widget.eventId,
+          latitude: location.latitude.toString(),
+          longitude: location.longitude.toString());
+      return res;
+    } catch (e) {
+      log("Error on event loading " + e);
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+              "Das Event konnte aufgrund eines Fehlers nicht geladen werden. Versuche es später erneut.")));
+    }
   }
 
   Widget _showMapLocation(double latitude, double longitude) {

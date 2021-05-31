@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:actevents/models/actevent.dart';
 import 'package:actevents/routes/events/eventsDetailPage.dart';
 import 'package:flutter/cupertino.dart';
@@ -160,8 +162,14 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Future<List<String>> _fetchFavourites() async {
-    var favourites = await widget.apiService.getUserFavourites();
-    return favourites.map((e) => e.id).toList();
+    try {
+      var favourites = await widget.apiService.getUserFavourites();
+      return favourites.map((e) => e.id).toList();
+    } catch (e) {
+      log("Error on favourite loading " + e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text("Die Favoriten können nicht geladen werden.")));
+    }
   }
 
   Future<void> _handleRefresh() async {
