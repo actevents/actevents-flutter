@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         apiService: widget.apiService,
         locationService: widget.locationService,
       ),
-      ProfilePage(auth: auth, onSingout: onSignOut),
+      ProfilePage(auth: auth, onSingout: onSignOut,apiService: widget.apiService),
     ];
 
     return new Scaffold(
