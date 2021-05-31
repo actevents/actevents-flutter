@@ -166,7 +166,8 @@ class _EventsPage extends State<EventsPage> {
       var favourites = await widget.apiService.getUserFavourites();
       return favourites.map((e) => e.id).toList();
     } catch (e) {
-      log("Error on favourite loading " + e);
+      log("Error on favourite loading ");
+      log(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text("Die Favoriten können nicht geladen werden.")));
     }
