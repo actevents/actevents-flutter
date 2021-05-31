@@ -106,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
-              "Das Event konnte aufgrund eines Fehlers nicht aus deinen Favoriten gelöscht werden. Versuche es später erneut.")));
+              "Das Event konnte aufgrund eines Fehlers micht gelöscht werden. Versuche es später erneut.")));
       print(e);
     }
   }
