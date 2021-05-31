@@ -57,8 +57,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Container(
                     child: Text(
-                      "Meine Events:",
-                      textScaleFactor: 2,
+                      "Meine Events",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                      textScaleFactor: 1.5,
                     ),
                     margin: EdgeInsets.all(10),
                   ),

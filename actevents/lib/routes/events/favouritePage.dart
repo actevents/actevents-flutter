@@ -45,7 +45,8 @@ class _FavouritePageState extends State<FavouritePage> {
         _favouriteActevents = favourites;
       });
     } catch (e) {
-      log("Error loading favourites " + e);
+      log("Error loading favourites ");
+      log(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
               "Favoriten konnten nicht geladen werden. Bitte versuchen Sie es später erneut.")));

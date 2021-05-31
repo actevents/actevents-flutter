@@ -40,7 +40,8 @@ class _EventsDetailPageState extends State<EventsDetailPage> {
           longitude: location.longitude.toString());
       return res;
     } catch (e) {
-      log("Error on event loading " + e);
+      log("Error on event loading ");
+      log(e);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text(
