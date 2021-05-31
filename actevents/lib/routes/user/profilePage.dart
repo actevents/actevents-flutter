@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     trailing: IconButton(
                                         icon: Icon(Icons.delete),
                                         onPressed: () =>
-                                            _deleteFavourite(event)),
+                                            _deleteOwnEvent(event)),
                                     title: Text(event.name))));
                           }
                           return Column(children: widgets);
@@ -100,7 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Future<void> _deleteFavourite(Actevent event) async {
+  Future<void> _deleteOwnEvent(Actevent event) async {
     try {
       await widget.apiService.deleteOwnEvent(event);
       setState(() {
