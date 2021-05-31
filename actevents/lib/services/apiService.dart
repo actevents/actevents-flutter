@@ -67,6 +67,27 @@ class ApiService {
     }
   }
 
+  Future<List<Actevent>> getOwnEvents() async {
+    var uri =
+        Uri.https(this._baseUrl, this._envPath + '/events/me');
+
+    http.Response response = await http.get(uri, headers: this._headers);
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      List<Actevent> fetchedEvents =
+          body.map((dynamic itemJson) => Actevent.fromJSON(itemJson)).toList();
+      return fetchedEvents;
+    } else {
+      // TODO: error handling
+      print("Error ocured. Non 200 status code returned from api.");
+      print("Status code: " +
+          response.statusCode.toString() +
+          "\nBody: " +
+          response.body);
+      return [];
+    }
+  }
   Future<void> createNewEvent(Actevent actevent) async {
     var uri = Uri.https(this._baseUrl, this._envPath + '/events');
     var body = json.encode(actevent.acteventToJSON());
@@ -151,10 +172,20 @@ class ApiService {
     }
   }
 
+
   Future<void> deleteUserFavourite(Actevent actevent) async {
     Map<String, dynamic> queryParameters = {"favorite": actevent.id};
     var uri =
         Uri.https(this._baseUrl, this._envPath + '/favorites', queryParameters);
+    var response = await http.delete(uri, headers: this._headers);
+    if (response.statusCode != 200) {
+      throw ErrorDescription("Non 200 status code received from api");
+    }
+  }
+
+  Future<void> deleteOwnEvent(Actevent actevent) async {
+    var uri =
+        Uri.https(this._baseUrl, this._envPath + '/events/'+actevent.id);
     var response = await http.delete(uri, headers: this._headers);
     if (response.statusCode != 200) {
       throw ErrorDescription("Non 200 status code received from api");
