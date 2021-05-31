@@ -29,6 +29,7 @@ class _RootPageState extends State<RootPage> {
     super.initState();
     checkLogin();
     authStatus = AuthStatus.notSignedIn;
+    widget.location.getLocation();
   }
 
   void checkLogin() async {
@@ -47,7 +48,11 @@ class _RootPageState extends State<RootPage> {
     }
   }
 
-  void _updateAuthStatus(AuthStatus status) {
+  void _updateAuthStatus(AuthStatus status) async {
+    if (status == AuthStatus.signedIn) {
+      var token = await widget.auth.getIdToken();
+      _apiService = ApiService(idToken: token);
+    }
     setState(() {
       authStatus = status;
     });
