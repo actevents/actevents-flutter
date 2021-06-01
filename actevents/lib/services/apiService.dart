@@ -41,7 +41,6 @@ class ApiService {
           body.map((dynamic itemJson) => Actevent.fromJSON(itemJson)).toList();
       return fetchedEvents;
     } else {
-      // TODO: error handling
       print("Error ocured. Non 200 status code returned from api.");
       print("Status code: " +
           response.statusCode.toString() +
@@ -79,7 +78,6 @@ class ApiService {
           body.map((dynamic itemJson) => Actevent.fromJSON(itemJson)).toList();
       return fetchedEvents;
     } else {
-      // TODO: error handling
       print("Error ocured. Non 200 status code returned from api.");
       print("Status code: " +
           response.statusCode.toString() +
@@ -124,7 +122,6 @@ class ApiService {
       dynamic body = jsonDecode(response.body);
       return Actevent.fromJSON(body);
     } else {
-      // TODO: error handling
       print("Error ocured. Non 200 status code returned from api.");
       print("Status code: " +
           response.statusCode.toString() +

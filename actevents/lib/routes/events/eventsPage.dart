@@ -194,7 +194,6 @@ class _EventsPage extends State<EventsPage> {
   }
 
   Widget _displayEventList(List<Actevent> list) {
-    // TODO: implement way to refresh page when no events are found with current filter options
     if (list.length == 0)
       return _statusTextWithReloadOption(
           "Keine Events für deinen Standort gefunden.");
